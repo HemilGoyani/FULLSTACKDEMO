@@ -1,0 +1,88 @@
+{% extends 'base.html'%}
+
+{% block title %}Product / Part Numbers{% endblock %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3">
+            <h4 class="page-title">Products / Part Numbers</h4>
+            <ol class="breadcrumb">
+                <li><a href="/">SKF</a></li>
+                <li class="active">Products / Part Numbers</li>
+            </ol>
+        </div>
+        <div class="col-sm-9 text-right">
+            <a href="{% url 'technologyoptions:bulk-upload-products-or-part-numbers' %}" class="btn btn-primary btn-md waves-effect waves-light m-b-30"
+                data-animation="fadein" data-plugin="custommodal" data-overlaySpeed="200"
+                data-overlayColor="#0F58D6"><i class="md md-add"></i> Bulk Upload</a>
+            <a href="{% url 'technologyoptions:add-techno-type' %}" class="btn btn-primary btn-md waves-effect waves-light m-b-30"
+                style="margin-right:3px;" data-animation="fadein" data-plugin="custommodal" data-overlaySpeed="200"
+                data-overlayColor="#0F58D6"><i class="md md-add"></i> Add New Technology / Service</a>
+            <a href="{% url 'technologyoptions:add-technology-subcomponent' %}" class="btn btn-primary btn-md waves-effect waves-light m-b-30"
+                style="margin-right:3px;" data-animation="fadein" data-plugin="custommodal" data-overlaySpeed="200"
+                data-overlayColor="#0F58D6"><i class="md md-add"></i> Add New Technology / Service Sub Component</a>
+            <a href="{% url 'technologyoptions:add-product-or-part-number'%}" class="btn btn-primary btn-md waves-effect waves-light m-b-30"
+                data-animation="fadein" data-plugin="custommodal" data-overlaySpeed="200"
+                data-overlayColor="#0F58D6"><i class="md md-add"></i> Add New Product / Part Number</a>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12">
+            {% if object_list %}
+            <div class="card-box">
+                <div class="table-responsive">
+                    <table class="table list-table table-sm table-bordered table-striped mails m-0 table table-actions-bar">
+                        <thead>
+                            <tr>
+                                <th>Technology / Service </th>
+                                <th>Technology / Service Component</th>
+                                <th>Technology / Service Sub Component</th>
+                                <th>Part Number</th>
+                                <th>Unit</th>
+                                <th>PS Cost</th>
+                                <th>Distribution Cost</th>
+                                <th>End User Cost</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        {% for technology in object_list %}
+                        <tr>
+                            <td> {{ technology.technology_type|upper }}</td>
+                            <td> {{ technology.get_technology_component_display|upper }}</td>
+                            <td> {% if technology.technology_sub_component %} {{ technology.technology_sub_component }}{% else %}{% endif %}</td>
+                            <td> {{ technology.part_number }}</td>
+                            <td> {{ technology.unit|upper }}</td>
+                            <td> {% if technology.ps_cost == None %} TO BE ENTERED IN SCOPE BUILDER {% else %}{{ technology.ps_cost }}{% endif %}</td>
+                            <td> {% if technology.distribution_cost == None %} TO BE ENTERED IN SCOPE BUILDER {% else %}{{ technology.distribution_cost }}{% endif %}</td>
+                            <td> {% if technology.end_user_cost == None %} TO BE ENTERED IN SCOPE BUILDER {% else %}{{ technology.end_user_cost }}{% endif %}</td>
+                            <td>
+                                <div class="button-list">
+                                    {% if request.user.is_superuser %}
+                                    <a href="{% url 'technologyoptions:update-product-or-part-number' technology.id %}" class="btn btn-primary waves-effect waves-light"><i
+                                            class="md md-edit"></i></a>
+                                    <a href="{% url 'technologyoptions:delete-product-or-part-number' technology.id  %}" id="deleteButton" class="btn btn-primary waves-effect waves-light"><i
+                                                class="md md-delete"></i></a>
+                                    {% endif%}
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+
+                    </table>
+                </div>
+            </div>
+            {% else %}
+            <p class="text-center"> No Products / Part Numbers Found </p>
+            {% endif %}
+        </div> <!-- end col -->
+
+
+    </div>
+
+</div> <!-- container -->
+
+</div>
+{% endblock %}

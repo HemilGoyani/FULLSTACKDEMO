@@ -1,0 +1,328 @@
+{% extends 'quotation_base.html'%}
+{% load static %}
+{% load startswith %}
+{% load mathfilters %}
+{% block title %} {{ component|title }} Selection {% endblock %}
+
+{% block content %}
+
+<div class="container">
+  <ol class="breadcrumb">
+    <li><a href="/">SKF</a></li>
+    <li><a href="{% url 'quotations:quotations'%}">Quotations</a></li>
+    <li class="active">{{ component|title }} Selection</li>
+  </ol>
+  <div class="row">
+    {% include "timeline.html" %}
+  </div>
+  <div class="card-box">
+    <div class="row">
+      <div class="col-md-12 mx-auto mt-5">
+        <div class="text-center">
+          <h1>{{ component|title }} Selection ?</h1>
+        </div>
+
+        <form action="" method="POST">
+          {% csrf_token %}
+         
+          <div class="card mt-5 selection_card">
+            {% if quotation %}
+            {% for technology_Type in quotation.technology_type.all %}
+            
+            <div class="card-body">
+              <h6>{{technology_Type}}</h6>
+              <div class="item_row">
+                <table class="selection_table" border="1">
+                  <thead>
+                    <tr>
+                      <th colspan="12" class="text-right">
+                        <h4 style="display: inline-block;margin-right: 7px;border-right: 1px solid black;padding-right: 10px;">Total SPL: <span class="total-spl">0</span></h4>
+                        <h4 style="display: inline-block;">Total Cost: $ <span class="total-cost">0</span></h4>
+                      </th>
+                    </tr>
+                    <tr>
+                      <!-- <th></th> -->
+                      <th><label for="hardware_subcomponent_type">TECHNOLOGY / SERVICE SUB COMPONENT</label></th>
+                      <th> <label for="hardware_item_name">PART NUMBER</label></th>
+                      <th><label for="hardware_description">DESCRIPTION</label></th>
+                      <th> <label for="hardware_unit">UNIT</label> </th>
+                      <th> <label for="hardware_ps_cost">PS COST</label></th>
+                      <th> <label for="hardware_selling_cost">SELLING COST</label></th>
+                      <th> <label for="hardware_quantity">QUANTITY</label> </th>
+                      <th><label for = "total_cost">TOTAL COST</label></th>
+                      <th><label for="hardware_spl">SPL</label></th>
+                      <th> <label for="hardware_comment">COMMENT</label></th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                      {% for quotation_technology_option in quotation.quotation_technology_options.all %}
+                        {% if technology_Type == quotation_technology_option.technology_type and technology_component == quotation_technology_option.technology_component%}
+                          <tr>
+                            <!-- <td>
+                              <p></p>
+                            </td> -->
+                            
+                            <td>
+                              <select class="form-control select_box option-sub-component" name="sub_component" required>
+                                {% for sub_component in subcomponents %}
+                                  {% if technology_Type.type == sub_component.technology_type.type %}
+                                    <option value="{{ sub_component.id }}" data-url="{% url 'quotations:ajax-part-numbers' sub_component.id %}" {% if sub_component.sublist_item_name == quotation_technology_option.sub_component %}selected="selected"{% endif %}>{{sub_component}}</option>
+                                  {% endif %}
+                                {% endfor %}
+                              </select>
+                            </td>
+                            <td>
+                              <select class="form-control select_box option-part-number" name="part_number" required>
+                                {% for sub_component in subcomponents %}
+                                    {% if sub_component.sublist_item_name == quotation_technology_option.sub_component and sub_component.technology_type == technology_Type %}
+                                        {% for option in sub_component.technology_options.all %}
+                                          <option value="{{ option.id }}" {% if option.part_number == quotation_technology_option.part_number %}selected="selected"{% endif %} data-desc="{{option.description}}" data-unit="{{option.unit}}" data-ps-cost="{{option.ps_cost}}" data-selling-cost="{% if quotation.user_type == 'distributor' %}{{option.distribution_cost}}{% else %}{{option.end_user_cost}}{% endif %}">{{ option.part_number }}</option>
+                                        {% endfor %}
+                                    {% endif %}
+                                {% endfor %}
+                              </select>
+                            </td>
+                            <td class="option-description">
+                              <p>{{quotation_technology_option.description}}</p>
+                            </td>
+                            <td class="option-unit">
+                              {{quotation_technology_option.unit}}
+                            </td>
+                            <td class="option-ps-cost">
+                              $ {{quotation_technology_option.ps_cost}}
+                            </td>
+                            <td>
+                              $ <input type="number" step="0.01" class="option-selling-cost" id="hardware_selling_cost" name="selling_cost" min="{{quotation_technology_option.ps_cost}}"  value="{{ quotation_technology_option.selling_cost|replace_commas }}" required>
+                            </td>
+                            <td> <input type="number" class="option-quantity" id="hardware_quantity" name="quantity" min="1" value="{{quotation_technology_option.quantity}}">
+                            </td>
+                            <td class="option-total-cost"> $ {{quotation_technology_option.selling_cost |mul:quotation_technology_option.quantity}}</td>
+                            <td class="option-spl">{{quotation_technology_option.spl|floatformat:0}}</td>
+                            <td>
+                              <textarea id="hardware_comment" name="comment">{% if quotation_technology_option.comment %}{{quotation_technology_option.comment}}{% else %}{% endif %}
+                              </textarea>
+                            </td>
+                            <td>
+                              <a href="javascript:void(0)" role="button" class="btn-link delete_item"><i class="fa fa-trash"></i></a>
+                            </td>
+                          </tr>
+                        {% endif %}
+                      {% endfor %}
+                      <tr>
+                        <!-- <td>
+                          <p></p>
+                        </td> -->
+                        <td>
+                          <select class="form-control no-select2 select_box option-sub-component" name="sub_component" required>
+                            <option value=""></option>
+                            {% for sub_component in subcomponents %}
+                              {% if technology_Type.type == sub_component.technology_type.type %}
+                                <option value="{{ sub_component.id }}" data-url="{% url 'quotations:ajax-part-numbers' sub_component.id %}" {% if sub_component.sublist_item_name == quotation_technology_option.sub_component %}selected="selected"{% endif %}>{{sub_component}}</option>
+                              {% endif %}
+                            {% endfor %}
+                          </select>
+                        </td>
+                        <td>
+                          <select class="form-control no-select2 select_box option-part-number" name="part_number" required>
+                            <option value=""></option>
+                            {% for sub_component in subcomponents %}
+                              {% if technology_Type.type == sub_component.technology_type.type %}
+                                    {% for option in sub_component.technology_options.all %}
+                                        <option value="{{ option.id }}" {% if option.part_number == quotation_technology_option.part_number %}selected="selected"{% endif %} data-desc="{{option.description}}" data-unit="{{option.unit}}" data-ps-cost="{% if option.ps_cost %}{{option.ps_cost}}{% endif %}" data-selling-cost="{% if quotation.user_type == 'distributor' %}{{option.distribution_cost}}{% else %}{{option.end_user_cost}}}{% endif %}">{{ option.part_number }}</option>
+                                    {% endfor %}
+                                {% endif %}
+                            {% endfor %}
+                          </select>
+                        </td>
+                        <td class="option-description">  
+                        </td>
+                        <td class="option-unit">
+                        </td>
+                        <td class="option-ps-cost">
+                        </td>
+                        <td>
+                          $ <input type="number" step="0.01" class="option-selling-cost" id="hardware_selling_cost" name="selling_cost" min=""  value="">
+                        </td>
+                        <td> <input type="number" class="option-quantity" id="hardware_quantity" name="quantity" min="1" value="1">
+                        </td>
+                        <td class="option-total-cost"></td>
+                        <td class="option-spl"></td>
+                        <td>
+                          <textarea id="hardware_comment" name="comment"></textarea>
+                        </td>
+                        <td>
+                          <a href="javascript:void(0)" role="button" class="btn-link delete_item"><i class="fa fa-trash"></i></a>
+                        </td>
+                      </tr>
+                  </tbody>
+                </table>
+                <div class="add_item text-end mt-4">
+                  <a href="javascript:void(0)" role="button" class="btn-link add_item_btn">Add Item</a>
+                </div>
+              </div>
+            </div>
+            {% endfor %}
+            {% endif %}
+            </br>
+            <div class="text-center mt-4">
+              <a href="{{back_url}}" class="btn btn-primary steps_button">Back</a>
+              <button type="submit" class="btn btn-primary steps_button">Save & Next</button>
+              <a href="{% url 'quotations:quotation-summary' object.id %}" class="btn btn-primary steps_button">Skip To Summary</a>
+            </div>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+  $(document).on('click', ".add_item_btn", function () {
+    let html = $($(this).parent().parent()).find("table").attr("data-row");
+    $(this).closest('.item_row').children('table').children('tbody').append(`<tr>${html}</tr>`);
+    $(".no-select2").select2({
+      tags: true
+    });
+    $('[data-toggle="tooltip"]').tooltip();
+  });
+
+ 
+  document.getElementById("{{ component }}").classList.add("active")
+  $(document).ready(function () {
+    var quotation_user_type = `{{quotation.user_type}}`
+
+    $(document).on('change', '[name="sub_component"]', function () {
+      let sub_component_elem = $(this);
+      let value = this.value;
+      let url = `/quotations/${value}/ajax-part-numbers/`;
+      let part_num_elem = $($($(this).parent()).next()).find('[name="part_number"]');
+      $.get(url, (data, status) => {
+        part_num_elem.html('');
+        data.forEach((elem, index) => {
+          part_num_elem.append(`<option value="${elem["id"]}" data-desc="${elem["description"]}" data-unit="${elem["unit"]}" data-ps-cost="${elem["ps_cost"]}" data-selling-cost="$${quotation_user_type == 'distributor' ? elem["distribution_cost"] : elem["end_user_cost"]}">${elem["part_number"]}</option>`);
+        });
+        part_num_elem.select2("val", "");
+      });
+    });
+
+    function calculate_total_cost(elem) {
+      let total_costs_elems = $(elem).parents().closest("tbody").find("td.option-total-cost")
+      let spl_costs_elems = $(elem).parents().closest("tbody").find("td.option-spl")
+      let total_cost = 0
+      total_costs_elems.each(function (index, element) {
+        value = $(element).html().split("$")[1]
+        if (value) {
+          total_cost += Math.round(Number(value) * 100) / 100;
+        }
+      });
+      let total_spl = 0;
+      spl_costs_elems.each(function (index, element2) {
+        value = $(element2).html()
+        if (value) {
+          total_spl += Math.round(Number(value) * 100) / 100;
+        }
+      });
+      $(elem).parents().closest("table").find(".total-cost").html(Math.round(total_cost * 100) / 100);
+      $(elem).parents().closest("table").find(".total-spl").html(parseFloat(Math.round(total_spl)).toFixed(0));
+    }
+
+    function update_spl_and_cost_line_item(elem, selling_cost, ps_cost, quantity = 1) {
+      selling_cost.replace("$", "");
+      ps_cost.replace("$", "");
+      let total_cost = 0
+      if (selling_cost && quantity) {
+        total_cost = parseFloat(Math.round(selling_cost * quantity * 100) / 100).toFixed(2);
+      }
+      
+      let spl = parseFloat(0).toFixed(2);
+        if(Number(ps_cost) &&  Number(selling_cost)){
+          spl = parseFloat(Math.round((selling_cost / ps_cost) * 100)).toFixed(2) ;
+        }
+      $(elem).parents().closest('tr').find(".option-total-cost").html(`$ ${total_cost}`);
+      $(elem).parents().closest('tr').find(".option-spl").html(`${parseFloat(Math.round(spl)).toFixed(0)}`);
+    }
+
+    function validate_selling_cost(elem, selling_cost, ps_cost) {
+      if($(elem).next().hasClass('field-error')) {
+        $(elem).next().remove();
+      }
+      
+      if(Number(selling_cost) <= Number(ps_cost)) {
+        $(elem).after(`<p class="error field-error">It should be greater than PS cost ${ps_cost}</p>`);
+      }
+      
+      $(':input[type="submit"]').prop('disabled', false);
+      if($(".field-error").length) {
+        $(':input[type="submit"]').prop('disabled', true);
+      }
+    }
+
+    $(document).on('change', '[name="part_number"]', function () {
+      let part_number_elem = $(this);
+      let value = this.value;
+      if (value) {
+        let selected_option = $(this).find(`option[value='${value}']`).get(0);
+        let unit = $(selected_option).attr("data-unit");
+        let description = $(selected_option).attr("data-desc");
+        let ps_cost = $(selected_option).attr("data-ps-cost");
+        let selling_cost = $(selected_option).attr("data-selling-cost")
+        selling_cost = (selling_cost.includes("$")) ? selling_cost.split("$")[1] : selling_cost;
+        selling_cost = selling_cost.replace(",", "")
+        
+        $(this).parents().closest('tr').find(".option-description").html(`<p>${description}</p>`);
+        $(this).parents().closest('tr').find(".option-unit").html(unit);
+        $(this).parents().closest('tr').find("td").find("[name='quantity']").val(1);
+        $(this).parents().closest('tr').find("td").find("[name='comment']").val('');
+        if(ps_cost && selling_cost) {
+          $(this).parents().closest('tr').find(".option-ps-cost").html("$"+ps_cost);
+          $(this).parents().closest('tr').find("td").find("[name='selling_cost']").val(selling_cost);
+        }
+        else {
+          $(this).parents().closest('tr').find(".option-ps-cost").html(`${ps_cost ? ps_cost : "0.00"}`);
+          $(this).parents().closest('tr').find("td").find("[name='selling_cost']").html(`${selling_cost ? selling_cost : "0.00"}`);
+        }
+        update_spl_and_cost_line_item(this, selling_cost, ps_cost);
+        calculate_total_cost(this);
+      }
+    });
+
+    $(document).on('change', '.option-selling-cost', function () {
+      let selling_cost = this.value;
+      let quantity = $(this).parents().closest('tr').find(".option-quantity").val()
+      let ps_cost = $(this).parents().closest('tr').find(".option-ps-cost").html().split("$")[1]
+      update_spl_and_cost_line_item(this, selling_cost, ps_cost, quantity);
+      calculate_total_cost(this);
+      validate_selling_cost(this, selling_cost, ps_cost);
+    });
+
+    $(document).on('change', '.option-quantity', function () {
+      let quantity = this.value;
+      let selling_cost = $(this).parents().closest('tr').find(".option-selling-cost").val()
+      let ps_cost = $(this).parents().closest('tr').find(".option-ps-cost").html().split("$")[1]
+      update_spl_and_cost_line_item(this, selling_cost, ps_cost, quantity);
+      calculate_total_cost(this);
+    })
+
+    $(document).on('click', '.delete_item', function () {
+      elem = $($(this).parents().closest("tbody")).find("tr")
+      $(this).parents('tr').remove();
+      calculate_total_cost(elem);
+  });
+
+    $("table").each(function (index, element) {
+      calculate_total_cost($(this).find('.option-quantity').get(0));
+      last_row = $(this).find("tr").last()
+      $(this).attr("data-row", last_row.html());
+      last_row.remove()
+
+    });
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends 'base.html'%}
+{% load crispy_forms_tags %}
+{% block title %}Add User{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+	<!-- Page-Title -->
+	<div class="row">
+		<div class="col-sm-12">
+			<h4 class="page-title">{% block page_title %}Add User{% endblock %}</h4>
+			<ol class="breadcrumb">
+                <li><a href="/">SKF</a></li>
+				{% block  breadcrumb %}
+                <li><a href="{% url 'users:users'%}">Users</a></li></li>
+                <li class="active">Add User</li>
+				{% endblock %}
+            </ol>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col">
+			<div class="card-box">
+				<form action="" enctype='multipart/form-data' method="post" data-parsley-validate novalidate >
+					{% crispy form %}
+				</form>
+			</div>
+		</div>
+	</div>
+</div> <!-- container -->
+
+{% endblock %}
+{% block extra_js%}
+<script>
+    window.onload = function () {
+      $("#div_id_is_reviewer").removeClass('checkbox');
+    }
+  </script>
+{% endblock %}

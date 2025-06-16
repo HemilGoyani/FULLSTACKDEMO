@@ -1,0 +1,45 @@
+{% extends 'base.html'%}
+{% load crispy_forms_tags static %}
+{% block title %}Bulk Upload Products / Part Numbers{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block content %}
+
+	<div class="container">
+
+		<!-- Page-Title -->
+		<div class="row">
+			<div class="col-sm-12">
+				<h4 class="page-title">{% block page_title %}Bulk Upload Products / Part Numbers{% endblock %}</h4>
+				<ol class="breadcrumb">
+					<li><a href="/">SKF</a></li>
+					<li class="active">Bulk Upload Products / Part Numbers</li>
+				</ol>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-sm-12">
+			  	<div class="card-box" style="height: auto; width:100%;" data-parsley-validate novalidate>
+					<form method="POST" enctype="multipart/form-data">
+						{% csrf_token %}
+						{% if messages %}
+							{% for message in messages %}
+							<div class="alert alert-block alert-danger">
+								{{ message }}
+							</div>
+							{% endfor %}
+						{% endif %}
+						<p>Template for the Bulk Upload of Products / Part Numbers. <a href="{% static 'assets/Bulk Products _ Part Numbers.xlsx' %}" download>Download</a></p>
+						<input type="file" id="id_technology_files" name="bulk_technology_file" required accept=".xlsx, .xls"><br>
+						<input type="submit" value="Submit" class="btn btn-primary" style="margin-right: 5px; margin-bottom: 10px;"></input>
+						<a href="{% url 'technologyoptions:product-or-part-numbers' %}" class="btn" style="margin-bottom: 10px; background-color:#e4e4e4; color:black;">Cancel</a>
+					</form>     
+				</div>
+			</div>
+		</div>
+		
+	</div> <!-- container -->
+
+{% endblock %}

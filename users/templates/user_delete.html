@@ -1,0 +1,35 @@
+{% extends 'base.html'%}
+{% load crispy_forms_tags %}
+{% block title %}Delete User {{ object.email }}{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="page-title">{% block page_title %}Delete User {{object.email}}{% endblock %}</h4>
+            <ol class="breadcrumb">
+                <li><a href="/">SKF</a></li>
+				{% block  breadcrumb %}
+                <li><a href="{% url 'users:users'%}">Users</a></li></li>
+                <li class="active">Delete User</li>
+				{% endblock %}
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="card-box">
+                <form method="post" action="">{% csrf_token %}
+                    <p>Are you sure you want to delete "{{ object }}"?</p>
+                    <input type="submit" class="btn btn-primary" value="Confirm">
+                    <a href="{% url 'users:users' %}" class="btn btn-secondary" >Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div> <!-- container -->
+
+    {% endblock %}

@@ -1,0 +1,86 @@
+{% extends 'base.html'%}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Add Technology / Service Sub Component{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+	<!-- Page-Title -->
+	<div class="row">
+		<div class="col-sm-12">
+			<h4 class="page-title">{% block page_title %}Add Technology / Service Sub Component{% endblock %}</h4>
+			<ol class="breadcrumb">
+                <li><a href="/">SKF</a></li>
+				<li><a href="{% url 'technologyoptions:product-or-part-numbers' %}">Products / Part Numbers</a></li>
+				{% block  breadcrumb %}
+                <li class="active">Add Technology / Service Sub Component</li>
+				{% endblock %}
+            </ol>
+		</div>
+	</div>
+    <div class="row">
+        <div class="col">
+          {% if technololgy_subcomponents %}
+          <div class="card-box">
+            <div class="table-responsive-sm">
+              <table class="table list-table table-hover table-bordered technology_type_table">
+                <thead>
+                  <tr>
+                    <th scope="col">Technology / Service</th>
+                    <th scope="col">Technology / Service Component</th>
+                    <th scope="col">Technology / Service Sub Component</th>
+                    <th scope="col">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for technololgy_subcomponent in technololgy_subcomponents %}
+                  <tr>
+                    <td>{{technololgy_subcomponent.technology_type}}</td>
+                    <td>{{technololgy_subcomponent.get_technology_component_display}}</td>
+                    <td>{{technololgy_subcomponent.sublist_item_name}}</td>
+                    <td>
+                      <div class="button-list">
+                        {% if request.user.is_superuser %}
+                        <a href="{% url 'technologyoptions:update-technology-subcomponent' technololgy_subcomponent.id%}"
+                          class="btn btn-primary waves-effect waves-light"><i class="md md-edit"></i></a>
+                        <a href="{% url 'technologyoptions:delete-technology-subcomponent' technololgy_subcomponent.id %}" id="deleteButton"
+                          class="btn btn-primary waves-effect waves-light"><i class="md md-delete"></i></a>
+                        {% endif%}
+                      </div>
+                    </td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          {% else %}
+          {% block no_objs %}
+          <center>
+            <p>No Technologies / Services Found</p>
+          </center>
+          {% endblock %}
+          {% endif %}
+        </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <h4 class="page-title" style="margin-bottom:6px;">{% block form_title %}Add Technology / Service Sub Component{% endblock %}</h4>
+      </div>
+    </div>
+	<div class="row">
+		<div class="col">
+			<div class="card-box">
+				<form action="" enctype='multipart/form-data' method="post" data-parsley-validate novalidate >
+					{% crispy form %}
+				</form>
+			</div>
+		</div>
+	</div> <!-- container -->
+
+{% endblock %}

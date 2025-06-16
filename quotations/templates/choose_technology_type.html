@@ -1,0 +1,77 @@
+{% extends 'quotation_base.html'%}
+{% load static %}
+{% block title %}Choose Technology / Service{% endblock %}
+
+{% block content %}
+<div class="container">
+  <ol class="breadcrumb">
+    <li><a href="/">SKF</a></li>
+    <li><a href="{% url 'quotations:quotations'%}">Quotations</a></li>
+    <li class="active">Choose Technology / Service</li>
+  </ol>
+  <div class="row">
+    {% include "timeline.html" %}
+  </div>
+  <div class="card-box">
+    <div class="row">
+      <div class="col-md-12 mt-5">
+        <div class="text-center">
+          <h1>Choose Technology / Service ?</h1>
+        </div>
+        <form action="" class="mt-5" method="POST">
+          {% csrf_token %}
+          <div class="technology_btn_group">
+            {% if technology_types %}
+              {% for technology_type in technology_types %}
+                {% if selected_technology_types %}
+                  {% if technology_type in selected_technology_types %}
+                    <div class="technology-button">
+                      <label>
+                          <img src = "{% if technology_type.image %}{{technology_type.image.url}}{%endif%}"/>
+                          <input type="checkbox" name="technology_type" value="{{technology_type.type}}" checked><span>{{technology_type.type}}</span>
+                        </label>
+                      </div>
+                  {% else %}
+                    <div class="technology-button">
+                      <label>
+                        <img src = "{% if technology_type.image %}{{technology_type.image.url}}{%endif%}"/>
+                        <input type="checkbox" name="technology_type" value="{{technology_type.type}}" ><span>{{technology_type.type}}</span>
+                      </label>
+                    </div>
+                  {% endif %}
+                {% else %}
+                  {% if forloop.first %}
+                    <div class="technology-button">
+                      <label>
+                        <img src = "{% if technology_type.image %}{{technology_type.image.url}}{%endif%}"/>
+                        <input type="checkbox" name="technology_type" value="{{technology_type.type}}" checked><span>{{technology_type.type}}</span>
+                      </label>
+                    </div>
+                  {% else %}
+                    <div class="technology-button">
+                      <label>
+                        <img src = "{% if technology_type.image %}{{technology_type.image.url}}{%endif%}"/>
+                        <input type="checkbox" name="technology_type" value="{{technology_type.type}}" ><span>{{technology_type.type}}</span>
+                      </label>
+                    </div>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          </div>
+          </br>
+          <div class="text-center mt-4">
+            <a href="{% url 'quotations:edit' object.id %}" class="btn btn-primary steps_button">Back</a>
+            <button type="submit" class="btn btn-primary steps_button">Save & Next</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+  document.getElementById("choose-technology-type").classList.add("active")
+</script>
+{% endblock %}

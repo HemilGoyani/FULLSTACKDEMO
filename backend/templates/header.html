@@ -1,0 +1,70 @@
+{% load static %}
+{% load startswith %}
+<!-- Top Bar Start -->
+<div class="topbar ">
+     <!-- LOGO -->
+     
+     <!-- Button mobile view to collapse sidebar menu -->
+     <div class="navbar navbar-default" role="navigation">
+         <div class="container">
+               <div class="nav-row">
+                {% include "logo.html" %}
+                <h4 style="display: inline-block; border-right: 3px solid #0F58D6; min-height: 44px; margin: 0 45px;"></h4>
+                <div id="sidebar-menu" style="margin-left:0px; margin-right: auto;">
+                    <ul>
+                        {% if request.user.is_superuser %}
+                        <li class="">
+                            {% url 'users:users' as path %}
+                            <a href="{{ path }}"
+                                class="waves-effect waves-light {% if request.path|startswith:path %}active{% endif %}"><i
+                                    class="fa fa-users"></i><span><b style="font-size: 16px;">Users</b></span></a>
+                        </li>
+                        <li class="">
+                            {% url 'technologyoptions:product-or-part-numbers' as path %}
+                            <a href="{{ path }}"
+                                class="waves-effect waves-light {% if request.path|startswith:path %}active{% endif %}"><i
+                                    class="fa fa-gears"></i><span><b style="font-size: 16px;">Technology and Service Offer</b></span></a>
+                        </li>
+                        {% endif %}
+                        <li class="">
+                            {% url 'quotations:quotations' as path %}
+                            <a href="{{ path }}"
+                                class="waves-effect waves-light {% if request.path|startswith:path %}active{% endif %}"><i
+                                    class="fa fa-file"></i><span><b style="font-size: 16px;">Quotations</b></span> </a>
+                        </li>
+                        {% if request.user.is_superuser %}
+                        <li class="">
+                            {% url 'settings:settings' as path %}
+                            <a href="{{ path }}"
+                                class="waves-effect waves-light {% if request.path|startswith:path %}active{% endif %}"><i
+                                    class="md-settings"></i><span><b style="font-size: 16px;">Settings</b></span> </a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div style="text-align: right; padding-right: 15px;" >
+                    <ul class="nav navbar-nav navbar-right pull-right">
+                        <li class="dropdown">
+                            <a class="nav-link dropdown-toggle nav-user me-0 waves-effect waves-light" data-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                                <img src="{% static 'assets/images/avatar-1.png' %}" alt="user-image" width="40" height="40" class="img-circle">
+                                <span class="pro-user-name ms-1">
+                                    {{ request.user.name.split|first }}<i class=""></i> 
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a href="javascript:void(0)"><b>{{ request.user }}</b></a></li>
+                                <li><a href="{% url "user-profile" %}"><i class="ti-user m-r-5"></i> Profile</a></li>
+                                <li><a href="{% url 'change-password' %}"><i class="ti-lock m-r-5"></i> Change Password</a>
+                                </li>
+                                <li><a href="{% url "logout" %}"><i class="ti-power-off m-r-5"></i> Logout</a></li>
+                            </ul>
+                        </li>
+                        <li><p style="margin-top: 20px;"></p></li>
+                    </ul>
+                </div>
+               </div>
+            <!--/.nav-collapse -->
+        </div>
+    </div>
+</div>
+<!-- Top Bar End -->

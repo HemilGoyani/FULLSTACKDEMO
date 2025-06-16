@@ -1,0 +1,45 @@
+{% load static %}
+<ul class="step-time-line">
+    <li>
+        <a href="{% if quotation %}{% url 'quotations:edit' quotation.id %}{% else %}{% url 'quotations:create' %}{% endif %}" data-toggle="tooltip" data-placement="top" title="End User/Distributor Details" id="distributor-etails"></a>
+    </li>
+    <li class="{% if not quotation %}disabled{% endif %}">
+        <a href="{% if not quotation %}javascript:void(0){% else %}{% url 'quotations:choose-technology-type' object.id %}{% endif %}" data-toggle="tooltip" data-placement="top" title="Choose Technology / Service" id="choose-technology-type"></a>
+    </li>
+    <li class="{% if quotation and quotation.technology_type.all %}{% else %}disabled{% endif %}">
+        <a href="{% if quotation and quotation.technology_type.all %}{% url 'quotations:choose-user-type-distributor-or-client' object.id %}{% else %}javascript:void(0){% endif %}" data-toggle="tooltip" data-placement="top" title="Choose User Type Distributor/End User" id="choose-user-type-distributor"></a>
+    </li>
+    <li class="{% if quotation and quotation.technology_type.all %}{% else %}disabled{% endif %}">
+        <a href="{% if quotation and quotation.technology_type.all %}{% url 'quotations:tech-options-selection' object.id '1-Hardware'%}{% else %}javascript:void(0){% endif %}" data-toggle="tooltip" data-placement="top" title="Hardware Selection" id="Hardware"></a>
+    </li>
+    <li class="{% if quotation and quotation.technology_type.all %}{% else %}disabled{% endif %}">
+        <a href="{% if quotation and quotation.technology_type.all %}{% url 'quotations:tech-options-selection' object.id '2-Setup' %}{% else %}javascript:void(0){% endif %}" data-toggle="tooltip" data-placement="top" title="Setup Selection" id="Setup"></a>
+    </li>
+    <li class="{% if quotation and quotation.technology_type.all %}{% else %}disabled{% endif %}">
+        <a href="{% if quotation and quotation.technology_type.all %}{% url 'quotations:tech-options-selection' object.id '3-Training'%}{% else %}javascript:void(0){% endif %}" data-toggle="tooltip" data-placement="top" title="Training Selection" id="Training"></a>
+    </li>
+    <li class="{% if quotation and quotation.technology_type.all %}{% else %}disabled{% endif %}">
+        <a href="{% if quotation and quotation.technology_type.all %}{% url 'quotations:tech-options-selection' object.id '4-Software'%}{% else %}javascript:void(0){% endif %}" data-toggle="tooltip" data-placement="top" title="Software Selection" id="Software"></a>
+    </li>
+    <li class="{% if quotation and quotation.technology_type.all %}{% else %}disabled{% endif %}">
+        <a href="{% if quotation and quotation.technology_type.all %}{% url 'quotations:tech-options-selection' object.id '5-Ongoing'%}{% else %}javascript:void(0){% endif %}" data-toggle="tooltip" data-placement="top" title="Analytics and Reporting" id="Analytics and Reporting"></a>
+    </li>
+    <li class="{% if quotation and quotation.technology_type.all %}{% else %}disabled{% endif %}">
+        <a href="{% if quotation and quotation.technology_type.all %}{% url 'quotations:add-manual-items' object.id%}{% else %}javascript:void(0){% endif %}" data-toggle="tooltip" data-placement="top" title="Other Items" id="third-party-items"></a>
+    </li>
+    <li class="{% if quotation and quotation.technology_type.all %}{% else %}disabled{% endif %}">
+        <a href="{% if quotation and quotation.technology_type.all %}{% url 'quotations:choose-quotation-type' object.id%}{% else %}javascript:void(0){% endif %}" data-toggle="tooltip" data-placement="top" title="Choose The Quotation Type" id="choose-the-quotation-type"></a>
+    </li>
+    <li class="{% if quotation and quotation.technology_type.all %}{% else %}disabled{% endif %}">
+        <a href="{% if quotation and quotation.technology_type.all %}{% url 'quotations:quotation-intro-para' object.id%}{% else %}javascript:void(0){% endif %}" data-toggle="tooltip" data-placement="top" title="Quotation Introduction Paragraph" id="quotation-introduction-paragraph"></a>
+    </li>
+    <li class="{% if quotation and quotation.technology_type.all %}{% else %}disabled{% endif %}">
+        <a href="{% if quotation and quotation.technology_type.all %}{% url 'quotations:quotation-terms-and-conditions' object.id%}{% else %}javascript:void(0){% endif %}" data-toggle="tooltip" data-placement="top" title="Quotation Terms And Conditions" id="quotation-terms-and-conditions"></a>
+    </li>
+    <li class="{% if quotation and quotation.technology_type.all %}{% else %}disabled{% endif %}">
+        <a href="{% if quotation and quotation.technology_type.all %}{% url 'quotations:quotation-scope-of-works' object.id%}{% else %}javascript:void(0){% endif %}" data-toggle="tooltip" data-placement="top" title="Quotation Scope Of Works" id="quotation-scope-of-works"></a>
+    </li>
+    <li class="{% if quotation and quotation.technology_type.all %}{% else %}disabled{% endif %}">
+        <a href="{% if quotation and quotation.technology_type.all %}{% url 'quotations:quotation-summary' object.id%}{% else %}javascript:void(0){% endif %}" data-toggle="tooltip" data-placement="top" title="Quotation Summary" id="quotation-summary"></a>
+    </li>
+</ul>

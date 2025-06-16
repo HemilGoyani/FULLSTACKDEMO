@@ -1,0 +1,97 @@
+{% extends 'quotation_base.html'%}
+{% load static %}
+
+{% block title %}End User/Distributor Details{% endblock %}
+
+{% block content %}
+<div class="container">
+  <ol class="breadcrumb">
+    <li><a href="/">SKF</a></li>
+    <li><a href="{% url 'quotations:quotations'%}">Quotations</a></li>
+    <li class="active">End User/Distributor Details</li>
+  </ol>
+  <div class="row">
+    {% include "timeline.html"%}
+  </div>
+  <div class="card-box">
+    <div class="row">
+      <div class="col-md-12 mt-5">
+        <div class="text-center">
+          <h1>End User/Distributor Details</h1>
+        </div>
+        <form action="" method="POST">
+          {% csrf_token %}
+          {{ form.errors }}
+          <div class="mb-3 form-group">
+            <label for="name" class="required form-label">Customer Contact *</label>
+            <select class="form-control contact-name" id="contact-name" name="name" required style="width: 100%">
+              <option value="">Select or Create Customer</option>
+              {% for client in clients %}  
+                <option value="{{client.id}}" {%if client.name == selected_name %}selected {% endif %}>{{client.name}}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="mb-3 form-group">
+            <label for="position" class="form-label">Position *</label>
+            <input type="text" class="form-control" placeholder="Position" value="{{ object.client.position }}" id="customer-position" name="position" required>
+          </div>
+          <div class="mb-3 form-group">
+            <label for="company_name" class="form-label">Company Name*</label>
+            <input type="text" class="form-control" placeholder="Company" value="{{ object.client.company_name }}" id="customer-company-name" name="company_name" required>
+          </div>
+          <div class="mb-3 form-group">
+            <label for="company_address" class="form-label">Company Address *</label>
+            <input type="text" class="form-control" placeholder="Company Address" value="{{ object.client.company_address }}" id="customer-company-address" name="company_address"
+              required>
+          </div>
+          <div class="text-center form-group">
+            <button type="submit" class="btn btn-primary steps_button">Save & Next</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+{% block extra_js %}
+<style>
+  .select2 {
+    width: 100% !important;
+  }
+</style>
+<script>
+  $(document).ready(function(){
+    $(".contact-name").select2({
+      tags: true,
+    });
+  })
+  document.getElementById("contact-name").onchange = async function client(){
+    var id = document.getElementById("contact-name").value
+    if (id === "")
+    {
+      document.getElementById('customer-position').value = null
+      document.getElementById('customer-company-name').value = null
+      document.getElementById('customer-company-address').value = null
+      document.getElementById('customer-position').innerHTML = null
+      document.getElementById('customer-company-name').innerHTML = null
+      document.getElementById('customer-company-address').innerHTML = null
+      document.getElementById('customer-position').disabled = false
+      document.getElementById('customer-company-name').disabled = false
+      document.getElementById('customer-company-address').disabled = false
+    }
+    else if (id !== "")
+    {  
+      var ref = await fetch(`/quotations/${id}/quotation-details/`);
+      let data = await ref.json();
+      if(data){
+        document.getElementById('customer-position').value = data.position
+        document.getElementById('customer-company-name').value = data.company
+        document.getElementById('customer-company-address').value = data.company_address        
+      }
+    }
+  }
+  document.getElementById("distributor-etails").classList.add("active")
+  
+</script>
+{% endblock %}

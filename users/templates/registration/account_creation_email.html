@@ -1,0 +1,19 @@
+
+
+{% load static %}
+
+{% block email_body %}
+<div style="font-family: sans-serif; font-size: 14px; font-weight: normal; margin: 0; margin-bottom: 15px;">
+  <p>You're receiving this email because a secure account for you has been</p>
+  <p>added at {% if client_domain %} {{ client_domain }}{% else %} {{ site_name }}{% endif %}.</p> 
+  <p>To activate your account, please go to the following page and choose a new password:</p>
+  <p>{{ protocol }}://{{ domain }}{% url 'password_reset_confirm' uidb64=uid token=token %}</p>
+  <p>Your username is {{ user.get_username }}</p>
+  <p>By activating your {% if client_domain %}{{ client_domain }}{% else %} SKF {% endif %} account you agree to receive transactional email and/or SMS messages such as one time passwords and account notifications to your registered email address and/or mobile number in accordance with the law.</p>
+  <p>To ensure that you receive all emails from {% if client_domain  %} {{ client_domain }} {% else %} SKF {% endif %} and prevent them from ending up in junk, please add
+    {% if client_email %}<a href="mailto:{{ client_email }}">{{ client_email }}</a>{% else %}<a href="mailto:reports@skf">reports@skf</a>{% endif %} in your contacts and safe senders list. <a href="" target="_blank">Learn more</a></p>
+  <p>Welcome to {% if client_domain %} {{ client_domain }} {% else %} SKF {% endif %}</p>
+  <p>The {% if client_name %} {{ client_name }} {% else %} {{ site_name }} {% endif %} team</p>
+</div>
+
+{% endblock %}

@@ -1,0 +1,8 @@
+{% extends 'user_add.html'%}
+
+{% block title %}Update User {{ object.email }}{% endblock %}
+{% block page_title %}Update User {{ object.email }}{% endblock %}
+{% block  breadcrumb %}
+    <li><a href="{% url 'users:users' %}">Users</a></li>
+    <li class="active">Update User</li>
+{% endblock %}

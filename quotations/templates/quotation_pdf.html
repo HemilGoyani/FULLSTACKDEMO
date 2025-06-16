@@ -1,0 +1,804 @@
+{% load static startswith %}
+{% load mathfilters %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style type="text/css">
+    @import url('https://themes.googleusercontent.com/fonts/css?kit=fpjTOVmNbO4Lz34iLyptLUXza5VhXqVC6o75Eld_V98');
+
+   
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      color: #292526;
+      font-weight: 400;
+      text-decoration: none;
+      vertical-align: baseline;
+      font-size: 14px !important;
+      font-family: "Calibri";
+      font-style: normal;
+    }
+
+    h1,h2,h3,h4,h5,h6,strong{
+      font-weight: bold;
+      margin-bottom: 10px !important;
+    }
+
+    body{
+      box-sizing: border-box;
+      padding: 0;
+      margin: -100px;
+    }
+
+    .main-page {
+      width: 21cm;
+      min-height: 29.7cm;
+      padding: 2cm;
+      margin: 1cm auto;
+      border-radius: 5px;
+      background: white;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .main-page-subpage {
+      padding: 1cm;
+      height: 256mm;  
+    }
+
+    @page {
+      size: A4;
+      margin: 0;
+        @bottom-right {
+          content: "Page "counter(page)" of "counter(pages);
+          font-size: 12px;
+          margin-right: 50px;
+          margin-top: -90px;
+          text-align: center;
+          color: #0070C0;
+      };
+        @bottom-left {
+          content: "Commercially Confidential Information";
+          font-size: 14px;
+          margin-left: 50px;
+          margin-top: -90px;  
+          text-align: center;
+          color: red;
+      };
+    }
+
+    @media print {
+      .main-page {
+        margin: 0;
+        border: initial;
+        border-radius: initial;
+        width: initial;
+        min-height: initial;
+        box-shadow: initial;
+        background: initial;
+        page-break-after: always;
+      }
+      .technology-selection{
+        page-break-before: always;
+      }
+    }
+    
+
+    img {
+      max-width: 100%;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    table {
+      width: 100%;
+    }
+
+    p {
+      font-size: 15px;
+      font-weight: 400;
+    }
+
+    .data-table {
+      border: 1px solid #000;
+      border-collapse: collapse;
+      margin-bottom: 23px;
+    }
+
+    .data-table th {
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    .data-table td {
+      font-size: 12px;
+    }
+
+    .data-table th,
+    .data-table td {
+      padding: 2px 10px;
+      color: #000000;
+      border: 1px solid #000000;
+      vertical-align: middle;
+    }
+
+    .quatation_table.data-table th,
+    .quatation_table.data-table td {
+      padding: 6px 10px;
+      font-size: 14px;
+    }
+
+    .data-table tbody tr td:nth-child(1) {
+      width: 28%;
+    }
+
+    .data-table tbody tr td:nth-child(2) {
+      width: 32%;
+    }
+
+    .data-table tbody tr td:nth-child(3) {
+      width: 15%;
+    } 
+
+    .data-table tbody tr td:nth-child(4) {
+      width: 10%;
+    }
+    .data-table tbody tr td:nth-child(5) {
+      width: 20%;
+    }
+
+    .terms-text {
+      margin-left: 50px;
+    }
+
+    .terms-text li {
+      font-size: 14px;
+      margin-bottom: 10px;
+      color: #000;
+    }
+
+    .step-title {
+      margin-bottom: 15px;
+      color: #0070c0;
+      font-weight: 700;
+      text-decoration: underline;
+      vertical-align: baseline;
+      font-size: 16px;
+    }
+
+    .works-list {
+      padding-left: 20px;
+      margin-bottom: 30px;
+    }
+
+    .works-list h5 {
+      font-size: 12px;
+      font-family: "Verdana";
+      font-weight: 700;
+      margin-bottom: 7px;
+    }
+
+    .works-list ul {
+      margin-left: 30px;
+      list-style-type: disc;
+    }
+
+    .works-list ul li {
+      font-size: 14px;
+      color: #000000;
+      margin-bottom: 6px;
+    }
+
+    .other-info-list {
+      padding-left: 50px;
+      list-style-type: lower-alpha;
+    }
+    
+    .other-info-list li{
+      color: #0070c0;
+      margin-bottom: 5px;
+    }
+
+    .other-info-list li a {
+      color: #0070c0;
+      font-weight: 700;
+      text-decoration: underline;
+      vertical-align: baseline;
+      font-size: 14px;
+    }
+
+    .quatation_intro_header ul{
+      margin-bottom: 20px !important;
+    }
+
+  </style>
+</head>
+
+<body>
+
+  <div class="main-page">
+    <div class="main-page-subpage">
+      <table class="main-table" border="0">
+        <thead style="height: 110px;">
+          <tr>
+            <td style="text-align:left;padding: 40px 25px 40px;">
+              <img src="{{domain}}{% static 'assets/images/registered_trademark_logo.png' %}" style=" width: 130px; height: auto;" alt="logo" />
+            </td>
+          </tr>
+        </thead>  
+        <tbody style="height:calc(100% - 180px)">
+          <tr>
+            <td colspan="2">
+              <div style="max-width: 700px;margin: 0 auto; padding: 20px 0;">
+                <div class="logo" style="text-align: center;">
+                  <img src="{{domain}}{% static 'assets/images/new_logo.png' %}" alt="SKF" width="266" height="63" style="object-fit: contain;">
+                </div>
+                <div>
+                  <div style="text-align: center;">
+                    <h4 style="font-size: 21px;color: #292526;font-weight: 700;font-family: 'Verdana';margin-top: 38px;">Proposal
+                      No.
+                      <span style="font-size: 21px;text-transform: uppercase;font-weight: 700;">{{quotation.quotation_number}}</span>
+                    </h4>
+                    <span style="font-size: 21px;display: block;margin:20px 0;font-weight: 700;">For</span>
+                    <span style="font-size: 21px;font-weight: 700;">{{quotation.client.name|upper}}</span>
+                    <h5 style="font-size: 26px;margin:20px 0 15px;display: block;font-weight: 700;">SKF DIGITALISATION SOLUTION</h5>
+                    <img src="{{domain}}{% static 'assets/images/digitalisation.jpg' %}" width="465" alt="">
+                  </div>
+                  <table style="margin: 60px 0 30px;">
+                    <tbody>
+                      <tr>
+                        <td style="width: 50%;">
+                          <h6 style="font-size: 14px;margin-bottom: 15px">Prepared by: {% if quotation.creator.name %}{{quotation.creator.name}}{% else %}{{quotation.creator}}{% endif %}</h6>
+                          <ul>
+                            <li style="font-size: 14px;font-weight: 400;margin-bottom: 3px;">{% if quotation.creator.name %}{{quotation.creator.name}}{% else %}{{quotation.creator}}{% endif %}</li>
+                            <li style="font-size: 14px;font-weight: 400;margin-bottom: 3px;">{% if quotation.creator.position %}{{quotation.creator.position}}{% endif %}</li>
+                            <li style="font-size: 14px;font-weight: 400;margin-bottom: 3px;">SKF Australia Pty Ltd</li>
+                            <li style="font-size: 14px;font-weight: 400;margin-bottom: 3px;">E: {% if quotation.creator.email %}{{quotation.creator.email}}{% endif %}</li>
+                            <li style="font-size: 14px;font-weight: 400;margin-bottom: 3px;">M: {% if quotation.creator.phone %}{{quotation.creator.phone}}{% endif %}</li>
+                          </ul>
+                        </td>
+                        <td style="width: 50%;">
+                          <h6 style="font-size: 14px;margin-bottom: 15px">Reviewed by: {% if quotation.reviewer %}{{quotation.reviewer.name}}{% else %}{{quotation.reviewer}}{% endif %}</h6>
+                          <ul>
+                            <li style="font-size: 14px;font-weight: 400;margin-bottom: 3px;">{% if quotation.reviewer.name %}{{quotation.reviewer.name}}{% else %}{{quotation.reviewer}}{% endif %}</li>
+                            <li style="font-size: 14px;font-weight: 400;margin-bottom: 3px;">{% if quotation.reviewer.position %}{{quotation.reviewer.position}}{% endif %}</li>
+                            <li style="font-size: 14px;font-weight: 400;margin-bottom: 3px;">SKF Australia Pty Ltd</li>
+                            <li style="font-size: 14px;font-weight: 400;margin-bottom: 3px;">E: {% if quotation.reviewer.email %}{{quotation.reviewer.email}}{% endif %}</li>
+                            <li style="font-size: 14px;font-weight: 400;margin-bottom: 3px;">M: {% if quotation.reviewer.phone %}{{quotation.reviewer.phone}}{% endif %}</li>
+                          </ul>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>
+                          <ul style="margin-top: 10px;">
+                            <li style="font-size: 14px; font-style: italic; font-weight: 400;margin-bottom: 3px;">To: <br /> <br/>{% if quotation.client.name %}{{quotation.client.name}}{% else %}{{quotation.client.email}}{% endif %}</li>
+                            <li style="font-size: 14px; font-style: italic; font-weight: 400;margin-bottom: 3px;">{% if quotation.client.position %}{{quotation.client.position}}{% endif %}</li>
+                            <li style="font-size: 14px; font-style: italic; font-weight: 400;margin-bottom: 3px;">{% if quotation.client.company_name %}{{quotation.client.company_name}}{% endif %}</li>
+                            <li style="font-size: 14px; font-style: italic; font-weight: 400;margin-bottom: 3px;">{% if quotation.client.company_address %}{{quotation.client.company_address}}{% endif %}</li>
+                            <li style="font-size: 14px;font-weight: 400; font-style: italic;padding: 2px 10px 5px 0px;">Offer Ref: <span
+                                style="font-size: 10px; font-weight: 400; font-style: italic;">{{quotation.quotation_number}}</span>
+                             </li>
+                            </ul>
+                        </td>
+                        <td>
+                          <span style="display: block;font-size: 15px;text-align:center;font-weight: 400;font-style: italic;margin-bottom: 15px;">DATE:
+                            {{quotation.updated_at|date}}</span>
+                          <div style="width: max-content;margin: 30px 0 0px auto;text-align: left;">
+                            <img src="{{domain}}{% static 'assets/images/reebin.jpg' %}" alt="" style="width:250px;">
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                  <div>
+                      <h5 style="font-size: 15px;font-weight: 400;margin-bottom: 27px;  margin-bottom:10px; ">Dear {% if quotation.client.name %}{{quotation.client.name|title}}{% else %}{{quotation.client.email}}{% endif %},</h5>
+                      <p style="margin-bottom: 15px;">
+                        Thank you for giving SKF the opportunity to present to you with the proposal for Digitalisation Solution.
+                      </p>
+                  </div>
+                  {% if quotation.is_intropara %}
+                  <div>
+                    <h4 style="font-size: 16px;font-weight:700; margin-bottom: 20px;">Digitalisation Solution Details:</h4>
+                    <ul style="margin-left: 50px;list-style-type: disc;">
+                      {% if quotation.quotation_introduction_para.all %}
+                        {% for quotation_intro_para in quotation.quotation_introduction_para.all %}
+                          {% if quotation_intro_para.intro_para %}
+                            <li style="margin-bottom:15px;" class="quatation_intro_header">
+                              <h6 style="font-size: 15px;color: #000;margin-bottom:3px;font-weight: 700;">{{quotation_intro_para.technology_type}}:
+                              </h6>
+                              <p style="font-size: 14px!important;font-weight: 400;text-align: justify;">{% autoescape off   %}{{quotation_intro_para.intro_para}}{% endautoescape %}</p>
+                            </li>
+                          {% endif %}
+                        {%endfor %}
+                      {% endif %}
+                    </ul>
+                    <p style="margin-bottom: 15px;">Your interest in SKF Products and Services is very much appreciated. Should you
+                      have any questions after
+                      going through our proposal, please feel free to contact myself at your earliest convenience.</p>
+                      <div style="width:200px;">
+                        <p style="margin-bottom: 15px;">
+                          Yours Sincerely,
+                          <br />
+                          {% if quotation.creator.name%}{{quotation.creator.name|title}}{% else %}{{quotation.creator.email}}{% endif %}
+                        </p>
+                      </div> 
+                  </div>
+                  {% endif %}
+                  {% if quotation.is_background  and quotation.header and quotation.description %}
+                  <div class="technology-selection">
+                    <h4 class="step-title">Background</h4>
+                    <li style="margin:0 0 15px 15px;">
+                      <h6 style="font-size: 15px;color: #000;margin-bottom:3px;font-weight: 700;">{% autoescape off %}{{quotation.header}}{% endautoescape %}
+                      </h6>
+                      <p style="font-size: 14px!important;font-weight: 400;text-align: justify;">{% autoescape off %}{{quotation.description}}{% endautoescape %}</p>
+                    </li>
+                  </div>
+                  {% endif %}
+                  <div class="technology-selection">
+                      <h4 class="step-title">
+                        HARDWARE:</h4>
+                        {%for technology_type in selected_technology_types %}
+                              <table class="data-table">
+                                <thead>
+                                  <tr class="table-title">
+                                    <th colspan="2" rowspan="1">{{technology_type}}</th>
+                                    <th {% if quotation.quotation_type == "itemized" or quotation.quotation_type == "subscription_based" %}colspan="3" {% else %} colspan="2" {% endif %}>TOTAL COST: $
+                                      {% for key, value in typevise_cost_list.items %}
+                                        {% if "1-Hardware" == key %}
+                                          {% for key, val in value.items%}
+                                            {% if technology_type == key %}
+                                              {{val}}
+                                            {% endif %}
+                                          {% endfor %}
+                                        {% endif %}
+                                      {% endfor %}
+                                    </th>
+                                  </tr>
+                                  <tr>
+                                    <th>Part Number</th>
+                                    <th>Description</th>
+                                    <th>UNIT</th>
+                                    <th>QTY</th>
+                                    {% if quotation.quotation_type == "itemized" or quotation.quotation_type == "subscription_based" %}
+                                    <th>COST</th>
+                                    {% endif %}
+                                  </tr>
+                                </thead>
+                                  {% for quotation_tech_option in quotation.quotation_technology_options.all %}
+                                    {% if quotation_tech_option.technology_type  == technology_type and quotation_tech_option.technology_component == "1-Hardware" %}
+                                    <tbody>
+                                      <tr>
+                                        <td>{{quotation_tech_option.part_number}}</td>
+                                        <td>{{quotation_tech_option.description}}</td>
+                                        <td>{{quotation_tech_option.unit}}</td>
+                                        <td>{{quotation_tech_option.quantity}} </td>
+                                        {% if quotation.quotation_type == "itemized" or quotation.quotation_type == "subscription_based" %}
+                                        <td>$ {{quotation_tech_option.selling_cost|mul:quotation_tech_option.quantity }}</td>
+                                        {% endif %}
+                                      </tr>
+                                    </tbody>
+                                  {% endif %}
+                                {% endfor %}
+                              </table>
+                        {% endfor %}
+                        <table class="data-table">
+                          <thead>
+                            <tr class="table-title">
+                              <th colspan="2">TOTAL HARDWARE COSTS</th>
+                              <th {% if quotation.quotation_type == "itemized" or quotation.quotation_type == "subscription_based" %}colspan="3" {% else %} colspan="2" {% endif %}>TOTAL COST: ${{cost_list|get_value:"1-Hardware"}}</th>
+                            </tr>
+                          </thead>
+                        </table>
+                  </div>
+                  <div class="technology-selection">
+                    <h4 class="step-title">
+                      SETUP:</h4>
+                      {%for technology_type in selected_technology_types %}
+                      <table class="data-table">
+                        <thead>
+                          <tr class="table-title">
+                            <th colspan="2" rowspan="1">{{technology_type}}</th>
+                            <th {% if quotation.quotation_type == "itemized" or quotation.quotation_type == "subscription_based" %}colspan="3" {% else %} colspan="2" {% endif %}>TOTAL COST: $
+                              {% for key, value in typevise_cost_list.items %}
+                                {% if "2-Setup" == key %}
+                                  {% for key, val in value.items%}
+                                    {% if technology_type == key %}
+                                      {{val}}
+                                    {% endif %}
+                                  {% endfor %}
+                                {% endif %}
+                              {% endfor %}
+                            </th>
+                          </tr>
+                          <tr>
+                            <th>Part Number</th>
+                            <th>Description</th>
+                            <th>UNIT</th>
+                            <th>QTY</th>
+                            {% if quotation.quotation_type == "itemized" or quotation.quotation_type == "subscription_based" %}
+                            <th>COST</th>
+                            {% endif %}
+                          </tr>
+                        </thead>
+                        {% for quotation_tech_option in quotation.quotation_technology_options.all %}
+                          {% if quotation_tech_option.technology_type  == technology_type and quotation_tech_option.technology_component == "2-Setup" %}
+                          <tbody>
+                            <tr>
+                              <td>{{quotation_tech_option.part_number}}</td>
+                              <td>{{quotation_tech_option.description}}</td>
+                              <td>{{quotation_tech_option.unit}}</td>
+                              <td>{{quotation_tech_option.quantity}} </td>
+                              {% if quotation.quotation_type == "itemized" or quotation.quotation_type == "subscription_based" %}
+                              <td>$ {{quotation_tech_option.selling_cost|mul:quotation_tech_option.quantity }}</td>
+                              {% endif %}
+                            </tr>
+                          </tbody>
+                          {% endif %}
+                        {% endfor %}
+                      </table>
+                      {% endfor %}
+                    <table class="data-table">
+                      <thead>
+                        <tr class="table-title">
+                          <th colspan="2">TOTAL SETUP COSTS</th>
+                          <th colspan="2">TOTAL COST: ${{cost_list|get_value:"2-Setup"}}</th>
+                        </tr>
+                      </thead>
+                    </table>
+                  </div>
+                  <div class="technology-selection">
+                    <h4 class="step-title">
+                      TRAINING:</h4>
+                      {%for technology_type in selected_technology_types %}
+                      <table class="data-table">
+                        <thead>
+                          <tr class="table-title">
+                            <th colspan="2" rowspan="1">{{technology_type}}</th>
+                            <th {% if quotation.quotation_type == "itemized" or quotation.quotation_type == "subscription_based" %}colspan="3" {% else %} colspan="2" {% endif %}>TOTAL COST: $
+                              {% for key, value in typevise_cost_list.items %}
+                                {% if "3-Training" == key %}
+                                  {% for key, val in value.items%}
+                                    {% if technology_type == key %}
+                                      {{val}}
+                                    {% endif %}
+                                  {% endfor %}
+                                {% endif %}
+                              {% endfor %}
+                            </th>
+                          </tr>
+                          <tr>
+                            <th>Part Number</th>
+                            <th>Description</th>
+                            <th>UNIT</th>
+                            <th>QTY</th>
+                            {% if quotation.quotation_type == "itemized" or quotation.quotation_type == "subscription_based" %}
+                            <th>COST</th>
+                            {% endif %}
+                          </tr>
+                        </thead>
+                        {% for quotation_tech_option in quotation.quotation_technology_options.all %}
+                            {% if quotation_tech_option.technology_type  == technology_type and quotation_tech_option.technology_component == "3-Training" %}
+                            <tbody>
+                              <tr>
+                                <td>{{quotation_tech_option.part_number}}</td>
+                                <td>{{quotation_tech_option.description}}</td>
+                                <td>{{quotation_tech_option.unit}}</td>
+                                <td>{{quotation_tech_option.quantity}} </td>
+                                {% if quotation.quotation_type == "itemized" or quotation.quotation_type == "subscription_based" %}
+                                <td>$ {{quotation_tech_option.selling_cost|mul:quotation_tech_option.quantity }}</td>
+                                {% endif %}
+                              </tr>
+                            </tbody>
+                            {% endif %}
+                          {% endfor %}
+                      </table>
+                      {% endfor %}
+                      <table class="data-table">
+                        <thead>
+                          <tr class="table-title">
+                            <th colspan="2">TOTAL TRAINING COSTS</th>
+                            <th colspan="2">TOTAL COST: ${{cost_list|get_value:"3-Training"}}</th>
+                          </tr>
+                        </thead>
+                      </table>
+                  </div>
+                  <div class="technology-selection">
+                    <h4 class="step-title">
+                      SOFTWARE:</h4>
+                      {%for technology_type in selected_technology_types %}
+                      <table class="data-table">
+                        <thead>
+                          <tr class="table-title">
+                            <th colspan="2">{{technology_type}}</th>
+                            <th {% if quotation.quotation_type == "itemized" or quotation.quotation_type == "subscription_based" %}colspan="3" {% else %} colspan="2" {% endif %}>TOTAL COST:  $
+                              {% for key, value in typevise_cost_list.items %}
+                                {% if "4-Software" == key %}
+                                  {% for key, val in value.items%}
+                                    {% if technology_type == key %}
+                                      {{val}}
+                                    {% endif %}
+                                  {% endfor %}
+                                {% endif %}
+                              {% endfor %}
+                            </th>
+                          </tr>
+                          <tr>
+                            <th>Part Number</th>
+                            <th>Description</th>
+                            <th>UNIT</th>
+                            <th>QTY</th>
+                            {% if quotation.quotation_type == "itemized" or quotation.quotation_type == "subscription_based" %}
+                            <th>COST</th>
+                            {% endif %}
+                          </tr>
+                        </thead>
+                        {% for quotation_tech_option in quotation.quotation_technology_options.all %}
+                          {% if quotation_tech_option.technology_type  == technology_type and quotation_tech_option.technology_component == "4-Software" %}
+                            <tbody>
+                              <tr>
+                                <td>{{quotation_tech_option.part_number}}</td>
+                                <td>{{quotation_tech_option.description}}</td>
+                                <td>{{quotation_tech_option.unit}}</td>
+                                <td>{{quotation_tech_option.quantity}}</td>
+                                {% if quotation.quotation_type == "itemized" or quotation.quotation_type == "subscription_based"%}
+                                <td>$ {{quotation_tech_option.selling_cost|mul:quotation_tech_option.quantity }}</td>
+                                {% endif %}
+                              </tr>
+                            </tbody>
+                          {% endif %}
+                        {% endfor %}
+                      </table>
+                      {% endfor %}
+                    <table class="data-table">
+                      <thead>
+                        <tr class="table-title">
+                          <th colspan="2">TOTAL SOFTWARE COSTS</th>
+                          <th {% if quotation.quotation_type == "itemized" or quotation.quotation_type == "subscription_based" %}colspan="3" {% else %} colspan="2"{% endif %}>TOTAL COST: ${{cost_list|get_value:"4-Software"}}</th>
+                        </tr>
+                      </thead>
+                    </table>
+                  </div>
+                  <div class="technology-selection">
+                    <h4 class="step-title">
+                      ANALYSIS AND REPORTING:</h4>
+                      {%for technology_type in selected_technology_types %}
+                      <table class="data-table">
+                        <thead>
+                          <tr class="table-title">
+                            <th colspan="2" rowspan="1">{{technology_type}}</th>
+                            <th {% if quotation.quotation_type == "itemized" or quotation.quotation_type == "subscription_based" %}colspan="3" {% else %} colspan="2"{% endif %}rowspan="1">TOTAL COST: $
+                              {% for key, value in typevise_cost_list.items %}
+                                {% if "5-Ongoing" == key %}
+                                  {% for key, val in value.items%}
+                                    {% if technology_type == key %}
+                                      {{val}}
+                                    {% endif %}
+                                  {% endfor %}
+                                {% endif %}
+                              {% endfor %}
+                            </th>
+                          </tr>
+                          <tr>
+                            <th>Part Number</th>
+                            <th>Description</th>
+                            <th>UNIT</th>
+                            <th>QTY</th>
+                            {% if quotation.quotation_type == "itemized" or quotation.quotation_type == "subscription_based"%}
+                            <th>COST</th>
+                            {% endif %}
+                          </tr>
+                        </thead>
+                        {% for quotation_tech_option in quotation.quotation_technology_options.all %}
+                          {% if quotation_tech_option.technology_type  == technology_type and quotation_tech_option.technology_component == "5-Ongoing" %}
+                            <tbody>
+                              <tr>
+                                <td>{{quotation_tech_option.part_number}}</td>
+                                <td>{{quotation_tech_option.description}}</td>
+                                <td>{{quotation_tech_option.unit}}</td>
+                                <td>{{quotation_tech_option.quantity}}</td>
+                                {% if quotation.quotation_type == "itemized" or quotation.quotation_type == "subscription_based"%}
+                                <td>$ {{quotation_tech_option.selling_cost|mul:quotation_tech_option.quantity }}</td>
+                                {% endif %}
+                              </tr>
+                            </tbody>
+                          {% endif %}
+                        {% endfor %}
+                      </table>
+                      {% endfor %}
+                    <table class="data-table">
+                      <thead>
+                        <tr class="table-title">
+                          <th colspan="2">TOTAL ANALYSIS AND REPORTING COSTS</th>
+                          <th colspan="2">TOTAL COST: ${{cost_list|get_value:"5-Ongoing"}}</th>
+                        </tr>
+                      </thead>
+                    </table>
+                  </div>
+                  {% if quotation.quotation_third_party_items.all %}
+                  <div class="technology-selection">
+                    <h4 class="step-title">
+                      OTHER ITEMS:</h4>
+                      <table class="data-table quatation_table">
+                        <thead>
+                          <tr>
+                            <th>Item Name</th>
+                            <th>Description</th>
+                            <th>UNIT</th>
+                            <th class="unit">QTY</th>
+                            {% if quotation.quotation_type == "itemized" or quotation.quotation_type == "subscription_based"%}
+                            <th>COST</th>
+                            {% endif %}
+                          </tr>
+                        </thead>
+                        {% if quotation.quotation_third_party_items.all %}     
+                            {% for quotation_third_party_item in quotation.quotation_third_party_items.all %}
+                            <tbody>
+                              <tr>
+                                <td>{{quotation_third_party_item.item_name}}</td>
+                                <td>{{quotation_third_party_item.description}}</td>
+                                <td>{{quotation_third_party_item.unit}}</td>
+                                <td class="unit">{{quotation_third_party_item.quantity}}</td>
+                                {% if quotation.quotation_type == "itemized" or quotation.quotation_type == "subscription_based"%}
+                                <td>$ {{quotation_third_party_item.selling_cost|mul:quotation_third_party_item.quantity }}</td>
+                                {% endif %}
+                              </tr>
+                            </tbody>
+                            {% endfor %}                    
+                        {% endif %}
+                      </table>
+                      <table class="data-table">
+                        <thead>
+                          <tr class="table-title">
+                            <th colspan="2">TOTAL OTHER ITEM COSTS</th>
+                            <th colspan="2">TOTAL COST: ${{third_party_total_cost}}</th>
+                          </tr>
+                        </thead>
+                      </table>
+                  </div>
+                  {% endif %}
+                  <div class="technology-selection">
+                      <h4 class="step-title">
+                        ONE OFF TOTAL COST SUMMARY:</h4>
+                      <table class="data-table quatation_table">
+                        <thead>
+                          <tr>
+                              <th>Technology / Service Component</th>
+                              <th>Total Cost</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% if cost_summary_oneoff %}
+                            {% for item in cost_summary_oneoff %}
+                              <tr>
+                                <td>{{item.component}}
+                                </td>
+                                <td>$ {{item.total_cost}}
+                                </td>
+                              </tr>
+                            {% endfor %}
+                          {% endif %}
+                          <tr>
+                            <td class="text-right"><b>Total Cost:</b>
+                            </td>
+                            <td>
+                              <b>$ {{quotation_total_cost_oneoff}}</b>
+                            </td>                            
+                          </tr>
+                          {% if quotation.quotation_type == "subscription_based" %}
+                          <tr>
+                            <td class="text-right"><b>Kick Off Fees:</b>
+                            </td>
+                            <td>
+                              <b>$ {{quotation.kick_off_fee}}</b>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="text-right"><b>Subscription Months:</b>
+                            </td>
+                            <td>
+                              <b> {{quotation.subscription_months}}</b>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="text-right"><b>Monthly Installment</b>
+                            </td>
+                            <td>
+                              <b>$ {{ monthly_installment }}</b>
+                            </td>
+                          </tr>
+                          {% endif %}
+                        </tbody>
+                      </table>
+                      
+                    </div>
+                  </div>
+                  <div class="technology-selection">
+                      <h4 class="step-title">
+                      ON GOING TOTAL COST SUMMARY:</h4>
+                      <table class="data-table quatation_table">
+                        <thead>
+                          <tr>
+                              <th>Technology / Service Component</th>
+                              <th>Total Cost</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {% if cost_summary_ongoing %}
+                            {% for item in cost_summary_ongoing %}
+                              <tr>
+                                <td>{{item.component}}
+                                </td>
+                                <td>$ {{item.total_cost}}
+                                </td>
+                              </tr>
+                            {% endfor %}
+                          {% endif %}
+                          <tr>
+                            <td>Other Items
+                            </td>
+                            <td>$ {{third_party_total_cost}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td class="text-right"><b>Total Cost:</b>
+                            </td>
+                            <td>
+                              <b>$ {{quotation_total_cost_ongoing}}</b>
+                            </td>                            
+                          </tr> 
+                        </tbody>
+                      </table>                  
+                  </div>
+                  <div class="technology-selection">
+                    <h4 class="step-title">
+                      VARIATION:</h4>
+                    <p style="color: #000;padding-left: 20px;margin-bottom: 15px;">
+                      This Proposal is based on the best available information and subject to change if deemed necessary.
+                      The principle is to pay for all additional costs, incurred to do the extra work outside the agreed scope of
+                      work and / or in any condition that causes delay and is outside SKF control.
+                    </p>
+                  </div>
+                  {% if quotation.is_scope_of_work %}
+                  <div class="technology-selection">
+                    <h4 class="step-title">
+                      SCOPE OF WORKS:</h4>
+                      <div class="works-list">
+                          {% autoescape off %}{{ quotation.scope_of_work }}{% endautoescape %}
+                      </div> 
+                  </div>
+                  {% endif %}
+                  {% if quotation.is_terms_and_condition %}
+                  <div class="technology-selection">
+                    <h4 class="step-title">
+                      TERMS AND CONDITIONS:</h4>
+                      <div class="works-list">
+                        {% autoescape off %}{{ quotation.terms_and_conditions }}{% endautoescape %}
+                      </div>
+                  </div>
+                  {% endif %}
+                </div>
+              </div>
+            </td>  
+          <tr>
+        </tbody>
+        <tfoot>
+          <tr style="height: 70px;">
+            <td colspan="2">
+            </td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+</body>
+</html>

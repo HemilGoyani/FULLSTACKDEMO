@@ -1,0 +1,96 @@
+{% extends 'quotation_base.html'%}
+{% load static %}
+{% block title %}Quotation Introduction Paragraph{% endblock %}
+
+{% block extra_css %}
+{{ block.super }}
+<style>
+    .mce-container .mce-menubar{
+        display : none;
+    }
+    .mce-container .mce-toolbar-grp { 
+        border-top: 1px solid #d7dce5 !important;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        if($("#elm1").length > 0){
+            tinymce.init({
+                selector: "textarea#elm1",
+                theme: "modern",
+                height:300,
+                toolbar: " bold  | bullist numlist ", 
+                style_formats: [
+                    {title: 'Bold text', inline: 'b'},
+                    {title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},
+                    {title: 'Red header', block: 'h1', styles: {color: '#ff0000'}},
+                    {title: 'Example 1', inline: 'span', classes: 'example1'},
+                    {title: 'Example 2', inline: 'span', classes: 'example2'},
+                    {title: 'Table styles'},
+                    {title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
+                ]
+            });    
+        }  
+    });
+    document.getElementById("quotation-introduction-paragraph").classList.add("active")
+</script>
+
+{% endblock %}
+
+{% block content %}
+
+
+<div class="container">
+    <ol class="breadcrumb">
+      <li><a href="/">SKF</a></li>
+      <li><a href="{% url 'quotations:quotations'%}">Quotations</a></li>
+      <li class="active">Quotation Introduction Paragraph</li>
+    </ol>
+    <div class="row">
+        {% include "timeline.html" %}
+      </div>
+    <div class="card-box">
+      <div class="row">
+        <div class="col-md-12 mx-auto mt-5">
+          <div class="text-center">
+            <h1>Quotation Introduction Paragraph</h1>
+          </div>
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    <div class="card mt-5 selection_card">
+                        <div class="card-body">
+                            {% if selected_technology_types %}
+                                {% for selected_technology_type in selected_technology_types %}
+                                    {% if quotation_intro_paras %}
+                                        {% for quotation_intro_para in quotation_intro_paras %}
+                                            {% if quotation_intro_para.technology_type == selected_technology_type %}
+                                                <h6>{{selected_technology_type}}</h6>
+                                                <textarea id="elm1" name="{{selected_technology_type}}_intro_para">
+                                                    {% if quotation_intro_para.intro_para %}{{quotation_intro_para.intro_para}}{% endif %}
+                                                </textarea>
+                                                </br>
+                                            {% endif %}
+                                        {%endfor %}
+                                    {% endif %}
+                                {%endfor %}
+                            {% endif %}
+                        </div>
+                        </br>
+                        <div class="text-center mt-4">
+                        <a href="{% url 'quotations:choose-quotation-type' object.id %}" class="btn btn-primary steps_button">Back</a>
+                        <button type="submit" class="btn btn-primary steps_button">Save & Next</button>
+                        <a href="{% url 'quotations:quotation-summary' object.id %}" class="btn btn-primary steps_button">Skip To Summary</a>
+                        </div>
+                </div>
+                </form>
+            
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

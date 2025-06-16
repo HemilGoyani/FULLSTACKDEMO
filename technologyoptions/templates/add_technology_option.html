@@ -1,0 +1,99 @@
+{% extends 'base.html'%}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}Add Product/Part Number{% endblock %}
+
+{% block extra_css %}
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+	<!-- Page-Title -->
+	<div class="row">
+		<div class="col-sm-12">
+			<h4 class="page-title">{% block page_title %}Add Product/Part Number{% endblock %}</h4>
+			<ol class="breadcrumb">
+                <li><a href="/">SKF</a></li>
+				<li><a href="{% url 'technologyoptions:product-or-part-numbers' %}">Products / Part Numbers</a></li>
+				{% block  breadcrumb %}
+                <li class="active">Add Product/Part Number</li>
+				{% endblock %}
+            </ol>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col">
+			<div class="card-box">
+				<form action="" enctype='multipart/form-data' method="post" data-parsley-validate novalidate >
+					{% crispy form %}
+				</form>
+			</div>
+		</div>
+	</div> <!-- container -->
+
+{% endblock %}
+
+{% block extra_js %}
+<script> 
+	
+	var technology_sub_components = document.getElementById(`id_technology_sub_component`)
+
+	$("#id_technology_type").on("change", async function() {
+		let technology_component = $("#id_technology_component").val()
+		let technology_sub_components = document.getElementById("id_technology_sub_component")
+		let technology_type = $(this).val()
+		let sub_length = technology_sub_components.options.length
+		set_list(technology_component,technology_sub_components, technology_type,sub_length)
+	});
+
+	$("#id_technology_component").on("change",async function(){
+		technology_component = $(this).val()
+		technology_sub_components = document.getElementById("id_technology_sub_component")
+		technology_type=$("#id_technology_type").val()
+		sub_length = technology_sub_components.options.length
+		set_list(technology_component,technology_sub_components, technology_type,sub_length);
+	})
+	
+	async function set_list(technology_component,technology_sub_components, technology_type,sub_length){
+		var data = {"technology_sub_component_list" : []}
+		
+		if(technology_type === "" || technology_component === "")
+		{
+			for(i=0; i<sub_length; i++){
+				technology_sub_components.remove(technology_sub_components.options[i])
+			}
+			$('#select2-id_technology_component-container').val("")
+			$('#select2-id_technology_sub_component-container').html("---------");
+		}
+		else{
+	
+			if(technology_type !== "" && technology_component !== ""){
+				var sub_component_list = await fetch(`technology-sub-component-list/${technology_type}/${technology_component}/`);
+				data = await sub_component_list.json();
+			}
+			
+			for(i=0; i<sub_length; i++){
+				
+				technology_sub_components.remove(technology_sub_components.options[i])
+			}
+			$('#select2-id_technology_sub_component-container').val('');
+			$('#select2-id_technology_sub_component-container').html("---------");
+			var option = document.createElement("option");
+			option.value = ""
+			option.text = "---------"
+			technology_sub_components.add(option);
+			
+			for(let key of Object.keys(data)){
+				var option = document.createElement("option");
+				option.text = data[key];
+				option.value = key
+				technology_sub_components.add(option);
+			}	
+		}
+	}
+</script>
+{% endblock %}
+

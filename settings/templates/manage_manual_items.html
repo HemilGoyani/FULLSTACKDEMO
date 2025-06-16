@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load static crispy_forms_tags %}
+{% block title %}Manage Other Items{% endblock %}
+
+{% block content %}
+<div class="container">
+
+  <!-- Page-Title -->
+  <div class="row">
+    <div class="col-sm-12">
+      <h4 class="page-title">{% block page_title %}Manage Other Items{% endblock %}</h4>
+      <ol class="breadcrumb">
+        <li><a href="/">SKF</a></li>
+        <li><a href="{% url 'settings:settings' %}">Settings</a></li>
+        {% block breadcrumb %}
+        <li class="active">Manage Other Items</li>
+        {% endblock %}
+      </ol>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      {% if manual_items_list %}
+      <div class="card-box">
+        <div class="table-responsive-sm">
+          <table class="table list-table table-hover table-bordered technology_type_table">
+            <thead>
+              <tr>
+                <th scope="col">Item Name</th>
+                <th scope="col">Description</th>
+                <th scope="col">Unit</th>
+                <th scope="col">PS Cost</th>
+                <th scope="col">Selling Cost</th>
+                <th scope="col">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for manual_item in manual_items_list %}
+              <tr>
+                <td>{{manual_item.item_name}}</td>
+                <td>{{manual_item.description}}</td>
+                <td>{{manual_item.unit}}</td>
+                <td>{{manual_item.ps_cost}}</td>
+                <td>{{manual_item.selling_cost}}</td>
+
+                <td>
+                  <div class="button-list">
+                    <a href="{% url 'settings:update-manual-item' manual_item.id %}"
+                      class="btn btn-primary waves-effect waves-light"><i class="md md-edit"></i></a>
+                    <a href="{% url 'settings:delete-manual-item' manual_item.id  %}" id="deleteButton"
+                      class="btn btn-primary waves-effect waves-light"><i class="md md-delete"></i></a>
+                    
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {% else %}
+      {% block no_objs %}
+      <center>
+        <p>No Other Items Found</p>
+      </center>
+      {% endblock %}
+      {% endif %}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <h4 class="page-title" style="margin-bottom:6px;"> {% block form_title %}Add Other Item{% endblock %}</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="card-box add_manual_items_form">
+        <form action="" enctype='multipart/form-data' method="post" data-parsley-validate novalidate>
+          {% crispy form %}
+          {% if cleaned_data.ps_cost.errors %}
+          {{cleaned_data.ps_cost.errors}}
+          {% endif %}
+        </form>
+      </div>
+    </div>
+  </div>
+</div> <!-- container -->
+{% endblock %}
+
+{% block extra_js %}
+  <script>
+    $( ".numberinput" ).addClass( "form-control" );
+  </script
+{% endblock %}
+
+{% block extra_css%}
+<style>
+.add_manual_items_form .controls .numberinput{
+  margin-right: 10px;
+}
+.add_manual_items_form .controls .numberinput{
+  width:220px;
+}
+.add_manual_items_form .controls{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.add_manual_items_form .controls .select2 {
+  width:100px !important;
+}
+
+.select2-container--default .select2-selection--single{
+  background-color: #FFFFFF;
+  border: 1px solid #E3E3E3;  
+  height:32px;
+  line-height: 32px;
+  font-size: 14px;
+  margin-right: 7px;
+}
+
+input[type=submit]{
+  margin-right:10px;
+}
+
+  </style>
+{% endblock %}

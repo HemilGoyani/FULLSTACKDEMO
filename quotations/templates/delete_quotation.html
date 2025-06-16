@@ -1,0 +1,32 @@
+{% extends 'base.html'%}
+{% load crispy_forms_tags %}
+{% block title %}Delete Quotation {% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="page-title">{% block page_title %}Delete Quotation {% endblock %}</h4>
+            <ol class="breadcrumb">
+                <li><a href="/">SKF</a></li>
+                <li class="active">Delete Quotation</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="card-box">
+                <form method="post" action="">{% csrf_token %}
+                    <p style="color:black;">Are you sure you want to delete Quotation: <b>{{ object.quotation_number }}</b> ?</p>
+                    <input type="submit" class="btn btn-primary" value="Confirm">
+                    <a href="{% url 'quotations:quotations' %}" class="btn btn-secondary" >Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div> <!-- container -->
+
+    {% endblock %}

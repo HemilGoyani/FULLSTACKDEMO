@@ -1,0 +1,44 @@
+
+<!-- ========== Left Sidebar Start ========== -->
+{% load startswith %}
+
+<div class="left side-menu" style="position: fixed;">
+    <div class="sidebar-inner slimscrollleft">
+        <!--- Divider -->
+        <div id="sidebar-menu">
+            <ul>
+                {% if request.user.is_superuser %}
+                <li class="">
+                    {% url 'users:users' as path %}
+                    <a href="{{ path }}"
+                        class="waves-effect waves-light {% if request.path|startswith:path %}active{% endif %}"><i
+                            class="fa fa-users"></i><span>Users</span></a>
+                </li>
+                <li class="">
+                    {% url 'technologyoptions:product-or-part-numbers' as path %}
+                    <a href="{{ path }}"
+                        class="waves-effect waves-light {% if request.path|startswith:path %}active{% endif %}"><i
+                            class="fa fa-gears"></i><span>Technology and Service Offer</span></a>
+                </li>
+                {% endif %}
+                <li class="">
+                    {% url 'quotations:quotations' as path %}
+                    <a href="{{ path }}"
+                        class="waves-effect waves-light {% if request.path|startswith:path %}active{% endif %}"><i
+                            class="fa fa-file"></i><span>Quotations</span> </a>
+                </li>
+                {% if request.user.is_superuser %}
+                <li class="">
+                    {% url 'settings:settings' as path %}
+                    <a href="{{ path }}"
+                        class="waves-effect waves-light {% if request.path|startswith:path %}active{% endif %}"><i
+                            class="md-settings"></i><span>Settings</span> </a>
+                </li>
+                {% endif %}
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<!-- Left Sidebar End -->

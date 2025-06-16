@@ -1,0 +1,62 @@
+{% extends 'quotation_base.html' %}
+{% load static %}
+{% block title %}Choose User Type{% endblock %}
+
+
+
+{% block content %}
+<div class="container">
+  <ol class="breadcrumb">
+    <li><a href="/">SKF</a></li>
+    <li><a href="{% url 'quotations:quotations'%}">Quotations</a></li>
+    <li class="active">Choose User Type Distributor/End User</li>
+  </ol>
+  <div class="row">
+    {% include "timeline.html" %}
+  </div>
+  <div class="card-box">
+    <div class="row">
+      <div class="col-md-12 mt-5">
+        <div class="text-center">
+          <h1>Choose User Type Distributor/End User ?</h1>
+        </div>
+
+        <form action="" method="POST">
+          {% csrf_token %}
+          <div class=" user_type" role="group" aria-label="Basic radio toggle button group">
+            {% if user_types %}
+              {% for key, val in user_types %}
+                {% if key == selected_user_type or forloop.first %}
+                  <div class="input_group">
+                    <input type="radio" class="btn-check" name="user_type" id="{{key}}" value ="{{key}}" autocomplete="off" checked>
+                    <label class="btn btn-outline-primary" for="{{key}}">{{val}}</label>
+                  </div>
+                {% else %}
+                  <div class="input_group">
+                    <input type="radio" class="btn-check" name="user_type" id="{{key}}" value="{{key}}" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="{{key}}">{{val}}</label>
+                  </div>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+
+            
+          </div>
+          </br>
+          <div class="text-center mt-2">
+            <a href="{% url 'quotations:choose-technology-type' object.id %}" class="btn btn-primary steps_button">Back</a>
+            <button type="submit" class="btn btn-primary steps_button">Save & Next</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+{% block extra_js %}
+<script>
+  document.getElementById("choose-user-type-distributor").classList.add("active")
+</script>
+{% endblock %}

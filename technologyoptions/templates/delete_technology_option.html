@@ -1,0 +1,33 @@
+{% extends 'base.html'%}
+{% load crispy_forms_tags %}
+{% block title %}Delete Product/Part Number {% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="page-title">{% block page_title %}Delete Product/Part Number {% endblock %}</h4>
+            <ol class="breadcrumb">
+                <li><a href="/">SKF</a></li>
+                <li><a href="{% url 'technologyoptions:product-or-part-numbers' %}">Products / Part Numbers</a></li>
+                <li class="active">Delete Product/Part Number</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="card-box">
+                <form method="post" action="">{% csrf_token %}
+                    <p>Are you sure you want to delete "{{object.technology_type}} {{ object }} {{object.part_number}}"?</p>
+                    <input type="submit" class="btn btn-primary" value="Confirm">
+                    <a href="{% url 'technologyoptions:product-or-part-numbers' %}" class="btn btn-secondary" >Cancel</a>
+                </form>
+            </div>
+        </div>
+    </div> <!-- container -->
+
+    {% endblock %}

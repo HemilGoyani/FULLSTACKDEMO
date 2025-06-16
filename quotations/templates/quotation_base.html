@@ -1,0 +1,72 @@
+{% extends 'base.html'%}
+{% load static %}
+
+{% block extra_css %}
+<link href="{% static 'assets/css/styles.css' %}" rel="stylesheet" type="text/css" />
+<style type="text/css">
+    .step-time-line{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 20px 0 50px;
+        padding: 0;
+        list-style: none;
+        counter-reset: section;
+    }
+    .step-time-line li{
+        padding: 0 15px;
+        position: relative;
+    }
+    .step-time-line li::after{
+        position: absolute;
+        content: '';
+        top: 50%;
+        transform: translateY(-50%);
+        height: 2px;
+        width: 100%;
+        background-color: #0f58d6;
+        z-index: 1;
+        left: -50%;
+    }
+    .step-time-line li:first-child::after{
+        display: none;
+    }
+    .step-time-line li.disabled::after{
+        background-color: #d6d0d0;
+    }
+    .step-time-line li a{
+        display: block;
+        position: relative;
+        z-index: 2;
+    }
+    .step-time-line li a::before{
+        counter-increment: section;
+        content: counter(section);
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: white;
+        color: #0f58d6;
+        border-radius: 100%;
+        border: 2px solid #0f58d6;
+        transition: all .3s ease-in-out 0s;
+    }
+    .step-time-line li a.active:before,
+    .step-time-line li a:hover:before{
+        background-color: #0f58d6;
+        color: white;
+        border-color: white;
+    }
+    .step-time-line li.disabled a:before{
+        background-color: #c5c5c5;
+        color: #f2f2f2;
+        border: 2px solid #d6d0d0;
+    }
+</style>
+{% endblock %}
+{% block extra_js %}
+<script src="{% static 'assets/js/script.js' %}"></script>
+<script src="{% static 'assets/plugins/tinymce/tinymce.min.js' %}"></script>
+{% endblock %}

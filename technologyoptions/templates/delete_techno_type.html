@@ -1,0 +1,90 @@
+{% extends 'base.html'%}
+{% load crispy_forms_tags %}
+{% block title %}Delete Technology / Service{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="page-title">{% block page_title %}Delete Technology / Service {% endblock %}</h4>
+            <ol class="breadcrumb">
+                <li><a href="/">SKF</a></li>
+                <li><a href="{% url 'technologyoptions:product-or-part-numbers' %}">Products / Part Numbers</a></li>
+                <li><a href="{% url 'technologyoptions:add-techno-type' %}">Technologies / Services</a></li>
+                <li class="active">Delete Technology / Service</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="card-box">
+                <form method="post" action="">
+                    {% csrf_token %}
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-block alert-danger">
+                            <ul><li>{{ message }}</li></ul>
+                        </div>
+                        {% endfor %}
+                        <p>Deleting the technology / service <b>{{object}}</b> would require deleting the following protected related objects:</p>
+                        <br>
+                        {%if technology_options %}
+                            Products / Part Numbers
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card-box">        
+                                        <ul>
+                                            {% for technology_option in technology_options %}
+                                            <li>
+                                                {{technology_option.technology_type}} - {{technology_option.technology_component}} - {{technology_option.technology_sub_component}} - {{technology_option.part_number}}
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %} 
+                        {%if technology_sub_components %}
+                        Technology / Service Sub Components
+                            <div class="row">
+                                <div class="col">
+                                    <div class="card-box">        
+                                        <ul>
+                                            {% for technology_sub_component in technology_sub_components %}
+                                            <li>
+                                                {{technology_sub_component.technology_type}} - {{technology_sub_component.technology_component}} - {{technology_sub_component.sublist_item_name}}
+                                            </li>
+                                            {% endfor %}
+                                        </ul>
+                                        
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %} 
+                        {%if intro_paras %}
+                            <p>Quotation Introduction Paragraphs used this Object</p>
+                        {% endif %} 
+                    {% endif %}
+                    {% if not messages %}
+                        <p>Are you sure you want to delete the technology / service <b>{{ object }}</b> ?</p>
+                        <input type="submit" class="btn btn-primary" value="Confirm">
+                        <a href="{% url 'technologyoptions:add-techno-type' %}" class="btn btn-secondary" >Cancel</a>
+                    {% endif %}
+                    
+                </form>
+                
+            </div>
+        </div>
+    </div>
+
+    
+
+    
+</div> <!-- container -->
+
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html'%}
+{% load crispy_forms_tags %}
+{% block title %}Delete Mnaual Item{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <!-- Page-Title -->
+    <div class="row">
+        <div class="col-sm-12">
+            <h4 class="page-title">{% block page_title %}Delete Other Item {% endblock %}</h4>
+            <ol class="breadcrumb">
+                <li><a href="/">SKF</a></li>
+                <li><a href="{% url 'settings:settings' %}">Settings</a></li>
+                <li><a href="{% url 'settings:manage-manual-items' %}">Manage Other Items</a></li>
+                <li class="active">Delete Other Item</li>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col">
+            <div class="card-box">
+                <form method="post" action="">
+                    {% csrf_token %}
+                    
+                    {% if not messages %}
+                        <p>Are you sure you want to delete the Other Item: "{{ object }}"?</p>
+                        <input type="submit" class="btn btn-primary" value="Confirm">
+                        <a href="{% url 'settings:manage-manual-items' %}" class="btn btn-secondary" >Cancel</a>
+                    {% endif %}
+                    
+                </form>
+                
+            </div>
+        </div>
+    </div>
+
+    
+
+    
+</div> <!-- container -->
+
+{% endblock %}

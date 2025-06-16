@@ -1,0 +1,533 @@
+{% extends 'quotation_base.html'%}
+{% load static startswith %}
+{% load mathfilters %}
+{% block title %}Quotation Summary{% endblock %}
+
+{% block extra_css %}
+  {{ block.super }}
+  <style>
+      .mce-container .mce-menubar{
+          display : none;
+      }
+      .mce-container .mce-toolbar-grp { 
+          border-top: 1px solid #d7dce5 !important;
+      }
+      .custom-checkbox{
+        display: flex;
+        align-items: center;
+      }
+      .custom-checkbox input{
+        margin: 0 4px 0 0;
+      }
+  </style>
+{% endblock %}
+  
+{% block content %}
+<div class="container">
+  <ol class="breadcrumb">
+    <li><a href="/">SKF</a></li>
+    <li><a href="{% url 'quotations:quotations'%}">Quotations</a></li>
+    <li class="active">Quotation Summary</li>
+  </ol>
+  <div class="row">
+    {% include "timeline.html" %}
+  </div>
+  <div class="card-box summary-card-box">
+    <div class="row">
+      <div class="col-md-12 my-5">
+        <div class="card selection_card summary_card">
+          <div class="card-body mb-0">
+            <div class="text-center">
+              <h2><b>Quotation Summary</b></h2>
+            </div>
+            <form action="" method="POST">
+              {%csrf_token%}
+              {% if quotation %}
+              <div class="card">
+                <div class="card-body mb-0">
+                  <div class="card-row">
+                    <h4 class="mb-0">End User/Distributor Details :</h4>
+                    <div class="edit_button text-end mb-2">
+                      <a href="{% url 'quotations:edit' object.id %}">Edit</a>
+                    </div>
+                  </div>
+                  <table class="summary_table summary_head_table mt-0">
+                    <thead>
+                      <tr>
+                        <th>
+                          <div class="summary-table-detail">
+                            <p>Contact Name:</p>
+                            <p class="summary-value">{{quotation.client.name}}</p>
+                          </div>
+                        </th>
+                        <th>
+                          <div class="summary-table-detail">
+                            <p>Position:</p>
+                            <p class="summary-value">{{quotation.client.position}}</p>
+                          </div>
+                        </th>
+                      </tr>
+                      <tr>
+                        <th>
+                          <div class="summary-table-detail">
+                            <p>Company:</p>
+                            <p class="summary-value">{{quotation.client.company_name}}</p>
+                          </div>
+                        </th>
+                        <th>
+                         <div class="summary-table-detail">
+                            <p>Company Address:</p>
+                            <p class="summary-value">{{quotation.client.company_address}}</p>
+                         </div>
+                        </th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+              <div class="card mt-3">
+                <div class="card-body mb-0">
+                  <table class="summary_table summary_head_table">
+                    <thead>
+                      <tr>
+                        <th style="width: 25%;">Technology / Service :</th>
+                        <td style="width: 55%;">
+                          {%for technology_type in selected_technology_types %}
+                          <span>
+                            {{technology_type.type}}
+                          </span>
+                          {%endfor%}
+                        </td>
+                        <th class="edit_button" style="width: 20%;">
+                          <a href="{% url 'quotations:choose-technology-type' object.id %}">Edit</a>
+                        </th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+              <div class="card mt-3">
+                <div class="card-body mb-0">
+                  <table class="summary_table summary_head_table">
+                    <thead>
+                      <tr>
+                        <th style="width: 25%;">User Type Distributor/End User :</th>
+                        <td style="width: 55%;">{{quotation.get_user_type_display}}</td>
+                        <td></td>
+                        <th class="edit_button" style="width: 20%;">
+                          <a href="{% url 'quotations:choose-user-type-distributor-or-client' object.id %}">Edit</a>
+                        </th>
+                      </tr>
+                    </thead>
+                  </table>
+                </div>
+              </div>
+              <div class="card mt-3">
+                <div class="card-body mb-0">
+                  <div class="card-header-row">
+                   <div class="custom-checkbox">
+                      <input type="checkbox" name="background_selection" {% if quotation.is_background %} checked {% endif %}/>
+                      <h4 class="mb-0">Background:</h4>
+                   </div>
+                  </div>
+                  <div><h3><b>Header</b></h3></div>
+                    <div class="card-body">
+                      <textarea id="elm1" name="header">
+                        {% if quotation.header%}
+                        {{quotation.header}}
+                        {% endif %}
+                      </textarea>
+                    </div>
+                  </div>
+                  <div><h3><b>Description<b></h3></div>
+                    <div class="card-body">
+                      <textarea id="elm2" name="description">
+                        {% if quotation.description %}
+                        {{quotation.description}}
+                        {% endif %}
+                      </textarea>
+                    </div>
+                  </div>
+              </div>
+              {% if components_dict %}
+              {% for component, val in components_dict.items %}
+              <div class="card mt-3 summary-card">
+                <div class="card-body mb-0">
+                  <div class="card-row">
+                    <h4><b>{{val}} Selection :</b></h4>
+                    <div class="edit_button" rowspan="5">
+                      <a href="{% url 'quotations:tech-options-selection' object.id component %}">Edit</a>
+                    </div>
+                  </div>
+                  {% if queryset_list|get_value:component == True %}
+                    <table class="summary_table summary_inner_table">
+                      <thead>
+                        <tr>
+                          <th colspan="11" class="text-right" style="padding: 15px;">
+                            <h4 class="mb-0" style="display: inline-block;margin-right: 7px;border-right: 1px solid black;padding-right: 10px;">Total SPL: {{component_spl_list|get_value:component|floatformat:0}} <span class="total-spl"></span></h4>
+                            <h4 class="mb-0" style="display: inline-block;">Total Cost: ${{cost_list|get_value:component}} <span class="total-cost"></span></h4>
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <th>Technology / Service</th>
+                          <th>Technology / Service Sub Component</th>
+                          <th>Part Number</th>
+                          <th>Description</th>
+                          <th>Unit</th>
+                          <th>PS Cost</th>
+                          <th>Selling Cost</th>
+                          <th>Quantity</th>
+                          <th>SPL</th>
+                          <th>Cost</th>
+                          <th>Comment</th>
+                        </tr>
+                        {%for technology_type in selected_technology_types %}
+                                {% if quotation.quotation_technology_options.all %}
+                                  {% for quotation_tech_option in quotation.quotation_technology_options.all %}
+                                    {% if quotation_tech_option.technology_type  == technology_type and quotation_tech_option.technology_component == component %}
+                                        <tr> 
+                                          <td rowspan="">{{technology_type.type}}</td>
+                                          <td>{{quotation_tech_option.sub_component}}</td>
+                                          <td>{{quotation_tech_option.part_number}}</td>
+                                          <td>{{quotation_tech_option.description}}</td>
+                                          <td>{{quotation_tech_option.unit}}</td>
+                                          <td>${{quotation_tech_option.ps_cost}}</td>
+                                          <td>${{quotation_tech_option.selling_cost}}</td>
+                                          <td class="">{{quotation_tech_option.quantity}}</td>
+                                          <td class="white-space-nowrap">{{quotation_tech_option.spl|floatformat:0}}</td>
+                                          <td>${{quotation_tech_option.selling_cost|mul:quotation_tech_option.quantity }} </td>
+                                          <td><p class="comment-text" data-toggle="tooltip" data-placement="top" title="{{quotation_tech_option.comment}}">{% if quotation_tech_option.comment %}{{quotation_tech_option.comment}}{% else %}{% endif %}</p></td>
+                                        </tr>
+                                    {% endif %}
+                                  {% endfor %}
+                                {% endif %}
+                            
+                        {%endfor%}
+                      </tbody>
+                    </table>
+                  {%else%}
+                  No items added yet.
+                  {% endif %}
+                </div>
+              </div>
+              
+              {% endfor %}
+              {% endif %}
+
+
+              <div class="card mt-3 summary-card">
+                <div class="card-body mb-0">
+                  <div class="card-row">
+                    <h4><b>Other Items:</b></h4>
+                    <div class="edit_button" rowspan="9">
+                      <a href="{% url 'quotations:add-manual-items' object.id %}">Edit</a>
+                    </div>
+                  </div>
+                  {% if queryset_list|get_value:"Manual_items" == True %}
+                  <table class="summary_table summary_inner_table">
+                    <thead>
+                      <tr>
+                        <th colspan="9" class="text-end">
+                          <p>Total SPL: {{third_party_total_spl|floatformat:0}} <span style="margin-left:10px;">Total Cost: ${{third_party_total_cost}}</span></p>
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th>Item Name</th>
+                        <th>Description</th>
+                        <th>Unit</th>
+                        <th>PS Cost</th>
+                        <th>Selling Cost</th>
+                        <th class="unit">Quantity</th>
+                        <th>SPL</th>
+                        <th>Cost</th>
+                        <th>Comment</th>
+                      </tr>
+                      <tr>
+                        {% if quotation.quotation_third_party_items.all %}
+                          
+                                {% for quotation_third_party_item in quotation.quotation_third_party_items.all %}
+                                <tr>
+  
+                                  <td>{{quotation_third_party_item.item_name}}</td>
+                                  <td>{{quotation_third_party_item.description}}</td>
+                                  <td>{{quotation_third_party_item.unit}}</td>
+                                  <td>${{quotation_third_party_item.ps_cost}}</td>
+                                  <td>${{quotation_third_party_item.selling_cost}}</td>
+                                  <td class="unit">{{quotation_third_party_item.quantity}}</td>
+                                  <td>
+                                    
+                                      {{quotation_third_party_item.spl|floatformat:0}}
+                                    
+                                  </td>
+                                  <td>${{quotation_third_party_item.selling_cost|mul:quotation_third_party_item.quantity }}</td>
+                                  <td>{%if quotation_third_party_item.comment %}{{quotation_third_party_item.comment}}{%endif%}</td>
+                                </tr>
+                                {% endfor %}
+                              
+                        {% endif %}
+                      </tr>
+                    </tbody>
+                  </table>
+                  {%else%}
+                    No items added yet.
+                  {% endif %}
+                </div>
+              </div>
+              <div class="card mt-3 summary-card">
+                <div class="card-body mb-0">
+                  <div class="card-row">
+                    <h4 class="mb-0">One Off Total Cost Summary:</h4>
+                    <div class="edit_button text-end mb-2">
+                      <a href="{% url 'quotations:choose-quotation-type' object.id %}">Edit</a>
+                    </div>
+                  </div>
+                  <table class="summary_table summary_inner_table">
+                    <thead>
+                      <tr>
+                          <th>Technology / Service Component</th>
+                          <th>Total Cost</th>
+                          <th>Total SPL</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% if cost_summary_onoff %}
+                        {% for item in cost_summary_onoff %}
+                          <tr>
+                            <td>{{item.component}}
+                            </td>
+                            <td>$ {{item.total_cost}}
+                            </td>
+                            <td>{{item.total_spl|floatformat:0}}
+                            </td>
+                          </tr>
+                        {% endfor %}
+                      {% endif %}
+                      <tr>
+                        <td class="text-right"><b>Total Cost:</b>
+                        </td>
+                        <td>
+                          <b>$ {{quotation_total_cost_onoff}}</b>
+                        </td>
+                        <td>
+                          <b>{{quotation_total_spl_onoff|floatformat:0}}</b>
+                        </td>
+                      </tr>
+                      {% if quotation.quotation_type == "subscription_based" %}
+                      <tr>
+                        <td class="text-right"><b>Kick Off Fees:</b>
+                        </td>
+                        <td>
+                          <b>$ {{quotation.kick_off_fee}}</b>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="text-right"><b>Subscription Months:</b>
+                        </td>
+                        <td>
+                          <b> {{quotation.subscription_months}}</b>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td class="text-right"><b>Monthly Installment:</b>
+                        </td>
+                        <td>
+                          <b>$ {{ monthly_installment|floatformat:2 }}</b>
+                        </td>
+                      </tr>
+                      {% endif %}
+                    </tbody>
+                  </table>
+                  
+                </div>
+              </div>
+              <div class="card mt-3 summary-card">
+                <div class="card-body mb-0">
+                  <div class="card-row">
+                    <h4 class="mb-0">On Going Total Cost Summary:</h4>
+                    <div class="edit_button text-end mb-2">
+                      <a href="{% url 'quotations:choose-quotation-type' object.id %}">Edit</a>
+                    </div>
+                  </div>
+                  <table class="summary_table summary_inner_table">
+                    <thead>
+                      <tr>
+                          <th>Technology / Service Component</th>
+                          <th>Total Cost</th>
+                          <th>Total SPL</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {% if cost_summary_ongoing %}
+                        {% for item in cost_summary_ongoing %}
+                          <tr>
+                            <td>{{item.component}}
+                            </td>
+                            <td>$ {{item.total_cost}}
+                            </td>
+                            <td>{{item.total_spl|floatformat:0}}
+                            </td>
+                          </tr>
+                        {% endfor %}
+                        <tr>
+                          <td>Other Items
+                          </td>
+                          <td>$ {{third_party_total_cost}}
+                          </td>
+                          <td>{{third_party_total_spl|floatformat:0}}
+                          </td>
+                        </tr>
+                      {% endif %}
+                      <tr>
+                        <td class="text-right"><b>Total Cost:</b>
+                        </td>
+                        <td>
+                          <b>$ {{quotation_total_cost_ongoing}}</b>
+                        </td>
+                        <td>
+                          <b>{{quotation_total_spl_ongoing|floatformat:0}}</b>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              
+              <div class="card mt-3">
+                <div class="card-body mb-0">
+                  <div class="card-row">
+                    <div class="custom-checkbox">
+                      <input type="checkbox" name="is_intropara" {% if quotation.is_intropara %} checked {% endif %}/>
+                      <h4 class="mb-0">Introduction Paragraphs: </h4>
+                    </div>
+                    <div class="edit_button text-end mb-2">
+                      <a href="{% url 'quotations:quotation-intro-para' object.id %}">Edit</a>
+                    </div>
+                  </div>
+                  <p>
+                    {% if quotation.quotation_introduction_para.all %}
+                        {% for quotation_intro_para in quotation.quotation_introduction_para.all %}
+                        {% if quotation_intro_para.intro_para %}<p>
+                                  <strong>{{quotation_intro_para.technology_type}}</strong>  :
+                                  {{quotation_intro_para.intro_para | safe}}
+                                  </br>
+                                </p>{% endif %}
+                        {%endfor %}
+                    {% endif %}
+                  </p>
+                </div>
+              </div>
+              <div class="card mt-3">
+                <div class="card-body mb-0">
+                  <div class="card-header-row">
+                    <div class="custom-checkbox">
+                      <input type="checkbox" name="is_terms_and_condition" {% if quotation.is_terms_and_condition %} checked {% endif %}/>
+                      <h4 class="mb-0">Terms And Conditions:</h4>
+                    </div>
+                    <div class="edit_button text-end mb-2">
+                      <a href="{% url 'quotations:quotation-terms-and-conditions' object.id %}">Edit</a>
+                    </div>
+                  </div>
+                  <p>
+                    {% if quotation.terms_and_conditions %}
+                      {{quotation.terms_and_conditions | safe}}
+                    {% endif %}
+                  </p>
+
+                </div>
+              </div>
+              <div class="card mt-3">
+                <div class="card-body mb-0">
+                  <div class="card-header-row">
+                    <div class="custom-checkbox">
+                      <input type="checkbox" name="is_scope_of_work" {% if quotation.is_scope_of_work %} checked {% endif %}/>
+                      <h4 class="mb-0">Scope of Works:</h4>
+                    </div>
+                    <div class="edit_button text-end mb-2">
+                      <a href="{% url 'quotations:quotation-scope-of-works' object.id %}">Edit</a>
+                    </div>
+                  </div>
+                  <p>
+                    {% if quotation.scope_of_work %}
+                      {{quotation.scope_of_work | safe}}
+                    {% endif %}
+                  </p>
+
+                </div>
+              </div>
+              <div class="card mt-3">
+                <div class="card-body mb-0 d-flex align-items-center">
+                  <h4 class="mb-0 mt-0" style="margin-right: 10px;">Assign a Reviewer?</h4>
+                    <div>
+                      <select class="form-control select_box" id="reviewer" name="quotation_reviewer"  required>
+                        <option value=""> Select Reviewer </option>
+                        {%for reviewer in reviewers_list %}
+                          <option {%if selected_reviewer == reviewer %}selected="selected"{%endif%} value="{{reviewer.id}}">{% if reviewer.name %}{{reviewer.name}}{% else %}{{ reviewer.email }}{% endif %}</option>
+                        {% endfor %}
+                      </select>
+                    </div>
+                </div>
+              </div>
+              <div class="text-center mt-4">
+                <a href="{% url 'quotations:quotation-scope-of-works' object.id %}" class="btn btn-primary steps_button">Back</a>
+                <button type="submit" class="btn btn-primary steps_button">Submit</button>
+                {% if quotation.reviewer and quotation.status == "waiting for approval" %}
+                  <a href="{% url 'quotations:quotation-update-status' quotation.id %}" class="btn btn-primary">Approve</a>
+                {% endif %}
+              </div>
+              {% endif %}
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+{{ block.super }}
+<script>
+  document.getElementById("quotation-summary").classList.add("active")
+  $(document).ready(function () {
+    if($("#elm1").length > 0){
+        tinymce.init({
+            selector: "textarea#elm1",
+            theme: "modern",
+            height:300,
+            toolbar: " bold | bullist numlist ",  
+            style_formats: [
+                {title: 'Bold text', inline: 'b'},
+                {title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},
+                {title: 'Red header', block: 'h1', styles: {color: '#ff0000'}},
+                {title: 'Example 1', inline: 'span', classes: 'example1'},
+                {title: 'Example 2', inline: 'span', classes: 'example2'},
+                {title: 'Table styles'},
+                {title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
+            ]
+        });    
+    }  
+  });
+  $(document).ready(function () {
+      if($("#elm2").length > 0){
+          tinymce.init({
+              selector: "textarea#elm2",
+              theme: "modern",
+              height:300,
+              toolbar: " bold | bullist numlist ", 
+              style_formats: [
+                  {title: 'Bold text', inline: 'b'},
+                  {title: 'Red text', inline: 'span', styles: {color: '#ff0000'}},
+                  {title: 'Red header', block: 'h1', styles: {color: '#ff0000'}},
+                  {title: 'Example 1', inline: 'span', classes: 'example1'},
+                  {title: 'Example 2', inline: 'span', classes: 'example2'},
+                  {title: 'Table styles'},
+                  {title: 'Table row 1', selector: 'tr', classes: 'tablerow1'}
+              ]
+          });    
+      }  
+  });
+</script>
+{% endblock %}
